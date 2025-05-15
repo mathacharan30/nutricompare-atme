@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800px" height="600px" viewBox="0 0 800 600" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>NutriCompare Hero Image</title>
+    <defs>
+        <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" id="linearGradient-1">
+            <stop stop-color="#C8E6C9" offset="0%"></stop>
+            <stop stop-color="#4CAF50" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" id="linearGradient-2">
+            <stop stop-color="#FFECB3" offset="0%"></stop>
+            <stop stop-color="#FF9800" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" id="linearGradient-3">
+            <stop stop-color="#BBDEFB" offset="0%"></stop>
+            <stop stop-color="#2196F3" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g transform="translate(50, 50)">
+            <!-- Smartphone -->
+            <rect fill="#FFFFFF" stroke="#333333" stroke-width="8" x="0" y="0" width="250" height="450" rx="20"></rect>
+            <rect fill="#F5F5F5" x="15" y="40" width="220" height="370" rx="5"></rect>
+            <circle fill="#333333" cx="125" cy="20" r="5"></circle>
+            <circle fill="#F5F5F5" stroke="#333333" stroke-width="2" cx="125" cy="425" r="15"></circle>
+            
+            <!-- App UI Elements -->
+            <rect fill="#4CAF50" x="25" y="50" width="200" height="40" rx="5"></rect>
+            <text font-family="Arial" font-size="16" font-weight="bold" fill="#FFFFFF" x="75" y="75">NutriCompare</text>
+            
+            <!-- Product Image -->
+            <rect fill="#FFFFFF" x="45" y="110" width="160" height="120" rx="5"></rect>
+            <rect fill="#FF9800" x="65" y="120" width="120" height="100" rx="5"></rect>
+            <text font-family="Arial" font-size="12" fill="#FFFFFF" x="95" y="175">JUICE</text>
+            
+            <!-- Nutrition Info -->
+            <rect fill="#FFFFFF" x="45" y="240" width="160" height="150" rx="5"></rect>
+            <text font-family="Arial" font-size="10" font-weight="bold" fill="#333333" x="55" y="260">Nutrition Facts</text>
+            <line x1="55" y1="265" x2="195" y2="265" stroke="#333333" stroke-width="1"></line>
+            
+            <text font-family="Arial" font-size="9" fill="#333333" x="55" y="285">Calories: 120</text>
+            <text font-family="Arial" font-size="9" fill="#333333" x="55" y="305">Sugar: 26g</text>
+            <text font-family="Arial" font-size="9" fill="#333333" x="55" y="325">Vitamin C: 80%</text>
+            <text font-family="Arial" font-size="9" fill="#333333" x="55" y="345">Ingredients:</text>
+            <text font-family="Arial" font-size="7" fill="#666666" x="55" y="360">Water, Mango Puree, Sugar,</text>
+            <text font-family="Arial" font-size="7" fill="#666666" x="55" y="370">Citric Acid, Natural Flavors</text>
+            
+            <!-- Health Score -->
+            <rect fill="#FFFFFF" stroke="#4CAF50" stroke-width="2" x="75" y="400" width="100" height="20" rx="10"></rect>
+            <rect fill="#4CAF50" x="75" y="400" width="65" height="20" rx="10"></rect>
+            <text font-family="Arial" font-size="10" font-weight="bold" fill="#FFFFFF" x="85" y="414">65/100</text>
+        </g>
+        
+        <!-- Product with Barcode -->
+        <g transform="translate(400, 100)">
+            <!-- Juice Bottle -->
+            <path d="M100,0 L150,0 L160,50 L160,300 C160,322 142,340 120,340 L130,340 C108,340 90,322 90,300 L90,50 Z" fill="#FFECB3" stroke="#FF9800" stroke-width="3"></path>
+            <path d="M100,0 L150,0 L160,50 L160,150 L90,150 L90,50 Z" fill="#FF9800" opacity="0.3"></path>
+            
+            <!-- Bottle Cap -->
+            <rect fill="#FF9800" x="110" y="-20" width="30" height="20" rx="5"></rect>
+            
+            <!-- Label -->
+            <rect fill="#FFFFFF" stroke="#FF9800" stroke-width="2" x="95" y="100" width="60" height="100" rx="5"></rect>
+            <text font-family="Arial" font-size="10" font-weight="bold" fill="#FF9800" x="105" y="120">MANGO</text>
+            <text font-family="Arial" font-size="10" font-weight="bold" fill="#FF9800" x="107" y="135">JUICE</text>
+            
+            <!-- Barcode -->
+            <rect fill="#FFFFFF" x="100" y="145" width="50" height="30"></rect>
+            <rect fill="#333333" x="105" y="150" width="1" height="20"></rect>
+            <rect fill="#333333" x="108" y="150" width="2" height="20"></rect>
+            <rect fill="#333333" x="112" y="150" width="1" height="20"></rect>
+            <rect fill="#333333" x="115" y="150" width="3" height="20"></rect>
+            <rect fill="#333333" x="120" y="150" width="2" height="20"></rect>
+            <rect fill="#333333" x="124" y="150" width="1" height="20"></rect>
+            <rect fill="#333333" x="127" y="150" width="2" height="20"></rect>
+            <rect fill="#333333" x="131" y="150" width="3" height="20"></rect>
+            <rect fill="#333333" x="136" y="150" width="1" height="20"></rect>
+            <rect fill="#333333" x="139" y="150" width="2" height="20"></rect>
+            <rect fill="#333333" x="143" y="150" width="1" height="20"></rect>
+            
+            <!-- Nutrition Facts (Small) -->
+            <rect fill="#FFFFFF" x="100" y="180" width="50" height="15"></rect>
+            <text font-family="Arial" font-size="5" fill="#333333" x="102" y="187">Nutrition Facts</text>
+            <line x1="102" y1="189" x2="148" y2="189" stroke="#333333" stroke-width="0.5"></line>
+            <text font-family="Arial" font-size="4" fill="#333333" x="102" y="194">Sugar: 26g</text>
+        </g>
+        
+        <!-- Scanning Animation -->
+        <g transform="translate(350, 200)">
+            <rect fill="none" stroke="#4CAF50" stroke-width="3" stroke-dasharray="10,5" x="0" y="0" width="250" height="150" rx="10">
+                <animate attributeName="stroke-dashoffset" from="0" to="30" dur="1s" repeatCount="indefinite" />
+            </rect>
+            
+            <!-- Scanning Line -->
+            <line x1="0" y1="75" x2="250" y2="75" stroke="#4CAF50" stroke-width="2">
+                <animate attributeName="y1" from="0" to="150" dur="2s" repeatCount="indefinite" />
+                <animate attributeName="y2" from="0" to="150" dur="2s" repeatCount="indefinite" />
+            </line>
+        </g>
+        
+        <!-- Health Score Visualization -->
+        <g transform="translate(450, 400)">
+            <circle fill="#FFFFFF" stroke="#EEEEEE" stroke-width="10" cx="75" cy="75" r="70"></circle>
+            <path d="M75,5 A70,70 0 0,1 138,110" stroke="#4CAF50" stroke-width="10" fill="none"></path>
+            <text font-family="Arial" font-size="24" font-weight="bold" fill="#333333" text-anchor="middle" x="75" y="75">65%</text>
+            <text font-family="Arial" font-size="12" fill="#666666" text-anchor="middle" x="75" y="95">Health Score</text>
+        </g>
+        
+        <!-- Nutrition Icons -->
+        <g transform="translate(600, 150)">
+            <!-- Sugar Icon -->
+            <circle fill="url(#linearGradient-2)" cx="25" cy="25" r="25"></circle>
+            <text font-family="Arial" font-size="10" font-weight="bold" fill="#FFFFFF" text-anchor="middle" x="25" y="29">SUGAR</text>
+            
+            <!-- Vitamin Icon -->
+            <circle fill="url(#linearGradient-1)" cx="25" cy="85" r="25"></circle>
+            <text font-family="Arial" font-size="10" font-weight="bold" fill="#FFFFFF" text-anchor="middle" x="25" y="89">VIT C</text>
+            
+            <!-- Preservative Icon -->
+            <circle fill="url(#linearGradient-3)" cx="25" cy="145" r="25"></circle>
+            <text font-family="Arial" font-size="8" font-weight="bold" fill="#FFFFFF" text-anchor="middle" x="25" y="149">PRESERV</text>
+        </g>
+        
+        <!-- Connecting Lines -->
+        <g stroke="#CCCCCC" stroke-width="2" stroke-dasharray="5,5">
+            <line x1="300" y1="200" x2="350" y2="200"></line>
+            <line x1="600" y1="200" x2="650" y2="175"></line>
+            <line x1="525" y1="350" x2="525" y2="400"></line>
+        </g>
+        
+        <!-- AI Analysis Text -->
+        <g transform="translate(600, 250)">
+            <rect fill="#FFFFFF" stroke="#4CAF50" stroke-width="2" x="0" y="0" width="150" height="100" rx="10"></rect>
+            <text font-family="Arial" font-size="12" font-weight="bold" fill="#4CAF50" x="30" y="25">AI ANALYSIS</text>
+            <line x1="20" y1="35" x2="130" y2="35" stroke="#EEEEEE" stroke-width="2"></line>
+            <text font-family="Arial" font-size="10" fill="#333333" x="10" y="55">• High in Sugar</text>
+            <text font-family="Arial" font-size="10" fill="#333333" x="10" y="75">• Contains Preservatives</text>
+            <text font-family="Arial" font-size="10" fill="#333333" x="10" y="95">• Good Vitamin C Source</text>
+        </g>
+    </g>
+</svg>
