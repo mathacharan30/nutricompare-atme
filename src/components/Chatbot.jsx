@@ -1,101 +1,152 @@
 import { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-  faRobot, 
-  faCheckCircle, 
-  faPaperPlane, 
-  faTimes 
+import {
+  faRobot,
+  faCheckCircle,
+  faPaperPlane,
+  faTimes,
+  faSpinner
 } from '@fortawesome/free-solid-svg-icons';
+import chatbotService from '../services/chatbotService';
 
 const Chatbot = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [messages, setMessages] = useState([
-    {
-      type: 'bot',
-      text: "Hello! I'm NutriBot, your personal nutrition assistant. How can I help you today?"
-    }
-  ]);
+  const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [sessionId, setSessionId] = useState(null);
+  const [hasWelcomed, setHasWelcomed] = useState(false);
   const chatBodyRef = useRef(null);
-  
+
   // Auto-scroll to bottom of chat when new messages are added
   useEffect(() => {
     if (chatBodyRef.current) {
       chatBodyRef.current.scrollTop = chatBodyRef.current.scrollHeight;
     }
   }, [messages]);
-  
+
+  // Initialize chat session when opened for the first time
+  useEffect(() => {
+    if (isChatOpen && !hasWelcomed) {
+      initializeChat();
+    }
+  }, [isChatOpen, hasWelcomed]);
+
+  // Initialize chat with welcome message
+  const initializeChat = async () => {
+    setIsLoading(true);
+    try {
+      const session = await chatbotService.startSession();
+      setSessionId(session.sessionId);
+
+      // Add welcome message
+      const welcomeMessage = {
+        type: 'bot',
+        text: session.message || "Hello! I'm NutriBot, your personal nutrition assistant. How can I help you today?"
+      };
+
+      // Add typing indicator
+      setMessages([{ type: 'typing' }]);
+
+      // Simulate typing delay for a more natural feel
+      setTimeout(() => {
+        setMessages([welcomeMessage]);
+        setHasWelcomed(true);
+        setIsLoading(false);
+      }, 1500);
+
+    } catch (error) {
+      console.error('Failed to initialize chat:', error);
+      setMessages([{
+        type: 'bot',
+        text: "Hello! I'm NutriBot, your personal nutrition assistant. How can I help you today?"
+      }]);
+      setHasWelcomed(true);
+      setIsLoading(false);
+    }
+  };
+
   // Toggle chat modal
   const toggleChat = () => {
-    setIsChatOpen(!isChatOpen);
+    const newState = !isChatOpen;
+    setIsChatOpen(newState);
+
+    // If closing the chat, reset session
+    if (!newState && sessionId) {
+      chatbotService.endSession(sessionId)
+        .then(() => {
+          console.log('Chat session ended');
+        })
+        .catch(error => {
+          console.error('Error ending chat session:', error);
+        });
+    }
   };
-  
+
   // Handle input change
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
   };
-  
+
   // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (inputValue.trim() === '') return;
-    
+
+    if (inputValue.trim() === '' || isLoading) return;
+
     // Add user message
     const userMessage = {
       type: 'user',
       text: inputValue
     };
-    
-    setMessages(prev => [...prev, userMessage]);
+
+    const currentMessages = [...messages, userMessage];
+    setMessages([...currentMessages, { type: 'typing' }]);
+
+    const userInput = inputValue;
     setInputValue('');
-    
-    // Simulate bot response after a short delay
-    setTimeout(() => {
-      const botResponse = getBotResponse(inputValue);
-      setMessages(prev => [...prev, botResponse]);
-    }, 1000);
-  };
-  
-  // Get bot response based on user input
-  const getBotResponse = (input) => {
-    // This is a simple simulation - in a real app, this would connect to an API
-    const lowerInput = input.toLowerCase();
-    
-    if (lowerInput.includes('hello') || lowerInput.includes('hi')) {
-      return {
-        type: 'bot',
-        text: "Hi there! How can I help with your nutrition questions today?"
-      };
-    } else if (lowerInput.includes('calorie') || lowerInput.includes('calories')) {
-      return {
-        type: 'bot',
-        text: "Calories are a measure of energy in food. The average adult needs about 2000-2500 calories per day, but this varies based on age, gender, weight, height, and activity level. Would you like me to calculate your specific calorie needs?"
-      };
-    } else if (lowerInput.includes('protein')) {
-      return {
-        type: 'bot',
-        text: "Protein is essential for building muscle and repairing tissues. Good sources include lean meats, fish, eggs, dairy, legumes, and nuts. The recommended daily intake is about 0.8g per kg of body weight for most adults."
-      };
-    } else if (lowerInput.includes('vitamin')) {
-      return {
-        type: 'bot',
-        text: "Vitamins are essential nutrients that your body needs in small amounts. They're found in a variety of foods, especially fruits and vegetables. Which specific vitamin would you like to know more about?"
-      };
-    } else if (lowerInput.includes('sugar')) {
-      return {
-        type: 'bot',
-        text: "Added sugars should be limited in a healthy diet. The American Heart Association recommends no more than 36g (9 teaspoons) for men and 25g (6 teaspoons) for women per day. Natural sugars found in fruits and dairy are generally considered healthier than added sugars."
-      };
-    } else {
-      return {
-        type: 'bot',
-        text: "That's an interesting nutrition question! While I'm just a demo chatbot with limited responses, the full version of NutriBot would provide detailed information about this topic. Is there something specific about nutrition you'd like to know?"
-      };
+    setIsLoading(true);
+
+    try {
+      // Send message to API
+      const response = await chatbotService.sendMessage(userInput, sessionId);
+
+      // Remove typing indicator and add bot response
+      setTimeout(() => {
+        setMessages(prev => {
+          // Filter out typing indicator
+          const filteredMessages = prev.filter(msg => msg.type !== 'typing');
+
+          // Add bot response
+          return [...filteredMessages, {
+            type: 'bot',
+            text: response.message
+          }];
+        });
+        setIsLoading(false);
+      }, 1000); // Simulate typing delay
+
+    } catch (error) {
+      console.error('Error sending message:', error);
+
+      // Remove typing indicator and add error message
+      setTimeout(() => {
+        setMessages(prev => {
+          // Filter out typing indicator
+          const filteredMessages = prev.filter(msg => msg.type !== 'typing');
+
+          // Add error message
+          return [...filteredMessages, {
+            type: 'bot',
+            text: "I'm sorry, I'm having trouble connecting right now. Please try again later."
+          }];
+        });
+        setIsLoading(false);
+      }, 1000);
     }
   };
-  
+
   // Chatbot features list
   const features = [
     "Get nutritional advice tailored to your needs",
@@ -103,7 +154,7 @@ const Chatbot = () => {
     "Learn about dietary restrictions and alternatives",
     "Understand product health scores and comparisons"
   ];
-  
+
   return (
     <>
       <ChatbotSection id="chatbot">
@@ -121,7 +172,17 @@ const Chatbot = () => {
                     </li>
                   ))}
                 </ChatbotFeatures>
-                <ChatButton onClick={toggleChat}>Start Chatting</ChatButton>
+                <ChatButton onClick={() => {
+                  // Reset chat state if it was previously opened
+                  if (hasWelcomed) {
+                    setMessages([]);
+                    setHasWelcomed(false);
+                    setSessionId(null);
+                  }
+                  toggleChat();
+                }}>
+                  Start Chatting
+                </ChatButton>
               </ChatbotInfo>
             </div>
             <div className="col-lg-6">
@@ -158,7 +219,7 @@ const Chatbot = () => {
           </div>
         </div>
       </ChatbotSection>
-      
+
       {/* Chat Modal */}
       <ChatModal className={isChatOpen ? 'open' : ''}>
         <ChatContainer>
@@ -176,21 +237,32 @@ const Chatbot = () => {
           </ChatHeader>
           <ChatBody ref={chatBodyRef}>
             {messages.map((message, index) => (
-              <Message key={index} className={message.type}>
-                <p>{message.text}</p>
-              </Message>
+              message.type === 'typing' ? (
+                <Message key={`typing-${index}`} className="bot typing">
+                  <TypingIndicator>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </TypingIndicator>
+                </Message>
+              ) : (
+                <Message key={index} className={message.type}>
+                  <p>{message.text}</p>
+                </Message>
+              )
             ))}
           </ChatBody>
           <form onSubmit={handleSubmit}>
             <ChatInputContainer>
-              <input 
-                type="text" 
-                placeholder="Type your nutrition question..." 
+              <input
+                type="text"
+                placeholder={isLoading ? "NutriBot is typing..." : "Type your nutrition question..."}
                 value={inputValue}
                 onChange={handleInputChange}
+                disabled={isLoading}
               />
-              <button type="submit">
-                <FontAwesomeIcon icon={faPaperPlane} />
+              <button type="submit" disabled={isLoading || inputValue.trim() === ''}>
+                <FontAwesomeIcon icon={isLoading ? faSpinner : faPaperPlane} spin={isLoading} />
               </button>
             </ChatInputContainer>
           </form>
@@ -206,7 +278,7 @@ const ChatbotSection = styled.section`
   background-color: var(--bg-light);
   position: relative;
   overflow: hidden;
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -218,7 +290,7 @@ const ChatbotSection = styled.section`
     border-radius: 50%;
     z-index: 0;
   }
-  
+
   &::after {
     content: '';
     position: absolute;
@@ -230,7 +302,7 @@ const ChatbotSection = styled.section`
     border-radius: 50%;
     z-index: 0;
   }
-  
+
   .row {
     position: relative;
     z-index: 1;
@@ -239,14 +311,14 @@ const ChatbotSection = styled.section`
 
 const ChatbotInfo = styled.div`
   padding-right: 30px;
-  
+
   h2 {
     font-size: 2.5rem;
     margin-bottom: 1.5rem;
     color: var(--primary-dark);
     position: relative;
     display: inline-block;
-    
+
     &::after {
       content: '';
       position: absolute;
@@ -258,18 +330,18 @@ const ChatbotInfo = styled.div`
       border-radius: 2px;
     }
   }
-  
+
   .lead {
     font-size: 1.2rem;
     margin-bottom: 2rem;
     color: var(--text-medium);
   }
-  
+
   @media (max-width: 992px) {
     padding-right: 0;
     margin-bottom: 50px;
     text-align: center;
-    
+
     h2::after {
       left: 50%;
       transform: translateX(-50%);
@@ -281,20 +353,20 @@ const ChatbotFeatures = styled.ul`
   list-style: none;
   padding: 0;
   margin-bottom: 2rem;
-  
+
   li {
     margin-bottom: 15px;
     display: flex;
     align-items: center;
     color: var(--text-medium);
-    
+
     svg {
       color: var(--primary-color);
       margin-right: 15px;
       font-size: 1.2rem;
     }
   }
-  
+
   @media (max-width: 992px) {
     max-width: 400px;
     margin: 0 auto 2rem;
@@ -315,7 +387,7 @@ const ChatButton = styled.button`
   box-shadow: 0 5px 15px rgba(165, 56, 96, 0.3);
   position: relative;
   overflow: hidden;
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -328,21 +400,21 @@ const ChatButton = styled.button`
     transition: opacity 0.3s ease;
     z-index: 0;
   }
-  
+
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 15px 25px rgba(165, 56, 96, 0.4);
   }
-  
+
   &:hover::before {
     opacity: 1;
   }
-  
+
   &:active {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(165, 56, 96, 0.3);
   }
-  
+
   @media (max-width: 992px) {
     margin: 0 auto;
     display: block;
@@ -360,11 +432,11 @@ const ChatbotPreview = styled.div`
   position: relative;
   transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
   transition: all 0.5s ease;
-  
+
   &:hover {
     transform: perspective(1000px) rotateY(0) rotateX(0);
   }
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -394,7 +466,7 @@ const ChatAvatar = styled.div`
   align-items: center;
   justify-content: center;
   margin-right: 15px;
-  
+
   svg {
     color: var(--primary-color);
     font-size: 1.2rem;
@@ -426,7 +498,7 @@ const ChatMessages = styled.div`
 const Message = styled.div`
   margin-bottom: 15px;
   max-width: 80%;
-  
+
   p {
     margin: 0;
     padding: 12px 15px;
@@ -434,26 +506,28 @@ const Message = styled.div`
     font-size: 0.95rem;
     line-height: 1.4;
   }
-  
+
   &.bot {
     align-self: flex-start;
-    
+
     p {
       background-color: white;
-      color: var(--text-dark);
+      color: #000000; /* Explicitly black text for bot messages */
       border-bottom-left-radius: 5px;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+      font-weight: 500; /* Slightly bolder for better readability */
     }
   }
-  
+
   &.user {
     align-self: flex-end;
-    
+
     p {
       background: var(--gradient-primary);
-      color: white;
+      color: white; /* White text for user messages */
       border-bottom-right-radius: 5px;
       box-shadow: 0 2px 5px rgba(165, 56, 96, 0.2);
+      font-weight: 500; /* Slightly bolder for better readability */
     }
   }
 `;
@@ -462,9 +536,9 @@ const ChatInputContainer = styled.div`
   display: flex;
   align-items: center;
   padding: 15px;
-  background-color: white;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  
+  background-color: var(--bg-white);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+
   input {
     flex: 1;
     border: none;
@@ -472,13 +546,26 @@ const ChatInputContainer = styled.div`
     border-radius: 20px;
     background-color: var(--bg-light);
     font-size: 0.95rem;
-    
+    color: var(--text-medium);
+    transition: all 0.3s ease;
+
     &:focus {
       outline: none;
-      box-shadow: 0 0 0 2px rgba(165, 56, 96, 0.2);
+      box-shadow: 0 0 0 2px rgba(255, 168, 205, 0.3);
+      color: var(--text-dark);
+    }
+
+    &:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      background-color: var(--bg-gray);
+    }
+
+    &::placeholder {
+      color: var(--text-light);
     }
   }
-  
+
   button {
     width: 40px;
     height: 40px;
@@ -492,10 +579,50 @@ const ChatInputContainer = styled.div`
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
-    
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--gradient-dark);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 0;
+    }
+
+    svg {
+      position: relative;
+      z-index: 1;
+    }
+
     &:hover {
       transform: scale(1.1);
       box-shadow: 0 5px 15px rgba(165, 56, 96, 0.3);
+
+      &::before {
+        opacity: 1;
+      }
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+
+      &:hover {
+        transform: none;
+        box-shadow: none;
+
+        &::before {
+          opacity: 0;
+        }
+      }
     }
   }
 `;
@@ -506,9 +633,9 @@ const ChatModal = styled.div`
   right: 30px;
   width: 380px;
   height: 500px;
-  background-color: white;
+  background-color: var(--bg-white); /* Match the dark theme background */
   border-radius: var(--border-radius);
-  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 30px rgba(0, 0, 0, 0.4);
   z-index: 1000;
   display: flex;
   flex-direction: column;
@@ -517,13 +644,14 @@ const ChatModal = styled.div`
   visibility: hidden;
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   overflow: hidden;
-  
+  border: 1px solid rgba(255, 168, 205, 0.2); /* Subtle border for better definition */
+
   &.open {
     transform: translateY(0);
     opacity: 1;
     visibility: visible;
   }
-  
+
   @media (max-width: 576px) {
     width: 100%;
     height: 100%;
@@ -562,10 +690,55 @@ const CloseButton = styled.button`
   justify-content: center;
   border-radius: 50%;
   transition: all 0.3s ease;
-  
+
   &:hover {
     background-color: rgba(255, 255, 255, 0.2);
     transform: rotate(90deg);
+  }
+`;
+
+const TypingIndicator = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 15px;
+
+  span {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin: 0 2px;
+    background-color: var(--primary-light);
+    border-radius: 50%;
+    opacity: 0.6;
+    animation: typing 1.4s infinite both;
+
+    &:nth-child(1) {
+      animation-delay: 0s;
+    }
+
+    &:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    &:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+  }
+
+  @keyframes typing {
+    0% {
+      transform: translateY(0);
+      opacity: 0.6;
+    }
+    50% {
+      transform: translateY(-5px);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(0);
+      opacity: 0.6;
+    }
   }
 `;
 

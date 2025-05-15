@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { PrimaryButton, OutlineButton } from '../styles/ButtonStyles';
-import heroImage from '../assets/images/hero-image.svg';
+import heroImage from '../assets/images/new/hero-image-blue.svg';
 
 const Hero = () => {
   return (
@@ -36,7 +36,7 @@ const Hero = () => {
 // Styled Components
 const HeroSection = styled.section`
   padding: 150px 0 100px;
-  background: linear-gradient(135deg, rgba(210, 88, 128, 0.2) 0%, rgba(138, 45, 79, 0.3) 100%);
+  background: linear-gradient(135deg, rgba(97, 124, 140, 0.8) 0%, rgba(14, 27, 33, 0.9) 100%);
   position: relative;
   overflow: hidden;
 
@@ -47,7 +47,7 @@ const HeroSection = styled.section`
     right: -50%;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle, rgba(255, 168, 205, 0.3) 0%, rgba(255, 168, 205, 0) 70%);
+    background: radial-gradient(circle, rgba(208, 227, 249, 0.3) 0%, rgba(208, 227, 249, 0) 70%);
     z-index: 0;
   }
 
@@ -58,7 +58,7 @@ const HeroSection = styled.section`
     left: -30%;
     width: 80%;
     height: 80%;
-    background: radial-gradient(circle, rgba(210, 88, 128, 0.2) 0%, rgba(210, 88, 128, 0) 70%);
+    background: radial-gradient(circle, rgba(159, 185, 203, 0.3) 0%, rgba(159, 185, 203, 0) 70%);
     z-index: 0;
   }
 `;
@@ -199,7 +199,7 @@ const HeroImageContainer = styled.div`
 const HeroImg = styled.img`
   max-width: 100%;
   animation: float 6s ease-in-out infinite;
-  filter: drop-shadow(0 10px 15px rgba(165, 56, 96, 0.2));
+  filter: drop-shadow(0 10px 15px rgba(45, 64, 78, 0.4));
 
   @keyframes float {
     0% {

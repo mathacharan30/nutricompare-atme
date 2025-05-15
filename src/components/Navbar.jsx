@@ -92,11 +92,12 @@ const NavbarContainer = styled.nav`
   left: 0;
   width: 100%;
   z-index: 1000;
-  background-color: ${props => props.scrolled ? 'rgba(30, 30, 30, 0.95)' : 'rgba(18, 18, 18, 0.8)'};
+  background-color: ${props => props.scrolled ? 'rgba(14, 27, 33, 0.95)' : 'rgba(14, 27, 33, 0.8)'};
   box-shadow: ${props => props.scrolled ? '0 2px 10px rgba(0, 0, 0, 0.3)' : '0 1px 5px rgba(0, 0, 0, 0.2)'};
   padding: ${props => props.scrolled ? '10px 0' : '15px 0'};
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
+  border-bottom: ${props => props.scrolled ? '1px solid rgba(159, 185, 203, 0.3)' : 'none'};
 `;
 
 const NavbarContent = styled.div`
@@ -114,7 +115,7 @@ const Logo = styled(Link)`
 `;
 
 const LogoSpan = styled.span`
-  color: var(--primary-color);
+  color: var(--light-blue);
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 `;
 
@@ -132,12 +133,12 @@ const NavLinks = styled.ul`
     width: 70%;
     height: calc(100vh - 60px);
     flex-direction: column;
-    background-color: var(--bg-light);
+    background-color: var(--dark-blue);
     box-shadow: -2px 0 10px rgba(0, 0, 0, 0.5);
     padding: 2rem;
     transition: right 0.3s ease;
     align-items: flex-start;
-    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    border-left: 1px solid rgba(159, 185, 203, 0.2);
 
     &.active {
       right: 0;
@@ -175,8 +176,8 @@ const NavLink = styled(Link)`
 
 const LoginButton = styled(Link)`
   background-color: transparent;
-  border: 2px solid var(--primary-color);
-  color: var(--primary-color);
+  border: 2px solid var(--light-blue);
+  color: var(--light-blue);
   padding: 8px 20px;
   border-radius: var(--border-radius);
   font-weight: 600;
@@ -186,8 +187,8 @@ const LoginButton = styled(Link)`
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 
   &:hover {
-    background-color: var(--primary-color);
-    color: white;
+    background-color: var(--light-blue);
+    color: var(--very-dark-blue);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }
 

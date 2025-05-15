@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800px" height="600px" viewBox="0 0 800 600" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Nutrition App Hero Image</title>
+    <defs>
+        <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" id="blueGradient">
+            <stop stop-color="#617C8C" offset="0%"></stop>
+            <stop stop-color="#2D404E" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" id="darkBlueGradient">
+            <stop stop-color="#2D404E" offset="0%"></stop>
+            <stop stop-color="#0E1B21" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="0%" y1="0%" x2="100%" y2="100%" id="lightBlueGradient">
+            <stop stop-color="#D0E3F9" offset="0%"></stop>
+            <stop stop-color="#9FB9CB" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Nutrition-App" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <!-- Background Elements -->
+        <circle id="Background-Circle-1" fill="#9FB9CB" opacity="0.2" cx="650" cy="150" r="100"></circle>
+        <circle id="Background-Circle-2" fill="#617C8C" opacity="0.2" cx="150" cy="450" r="80"></circle>
+        
+        <!-- Phone Frame -->
+        <rect id="Phone-Frame" fill="#0E1B21" x="300" y="100" width="200" height="400" rx="20"></rect>
+        <rect id="Phone-Screen" fill="#2D404E" x="310" y="110" width="180" height="380" rx="15"></rect>
+        
+        <!-- App UI Elements -->
+        <rect id="Header" fill="#617C8C" x="310" y="110" width="180" height="60" rx="15"></rect>
+        <text id="App-Title" font-family="Arial-BoldMT, Arial" font-size="16" font-weight="bold" fill="#FFFFFF">
+            <tspan x="360" y="145">NutriScan</tspan>
+        </text>
+        
+        <!-- Product Card -->
+        <rect id="Product-Card" fill="#2D404E" x="325" y="180" width="150" height="200" rx="10"></rect>
+        <circle id="Product-Image" fill="url(#lightBlueGradient)" cx="400" cy="230" r="40"></circle>
+        <rect id="Product-Name" fill="#FFFFFF" x="340" y="280" width="120" height="15" rx="3"></rect>
+        <rect id="Product-Description" fill="#D0E3F9" x="340" y="305" width="120" height="10" rx="3"></rect>
+        <rect id="Product-Description-2" fill="#D0E3F9" x="340" y="325" width="80" height="10" rx="3"></rect>
+        
+        <!-- Nutrition Facts -->
+        <rect id="Nutrition-Card" fill="#2D404E" x="325" y="390" width="150" height="90" rx="10"></rect>
+        <rect id="Nutrition-Bar-1" fill="#0E1B21" x="340" y="405" width="120" height="10" rx="5"></rect>
+        <rect id="Nutrition-Bar-1-Fill" fill="#9FB9CB" x="340" y="405" width="80" height="10" rx="5"></rect>
+        <rect id="Nutrition-Bar-2" fill="#0E1B21" x="340" y="425" width="120" height="10" rx="5"></rect>
+        <rect id="Nutrition-Bar-2-Fill" fill="#9FB9CB" x="340" y="425" width="60" height="10" rx="5"></rect>
+        <rect id="Nutrition-Bar-3" fill="#0E1B21" x="340" y="445" width="120" height="10" rx="5"></rect>
+        <rect id="Nutrition-Bar-3-Fill" fill="#9FB9CB" x="340" y="445" width="90" height="10" rx="5"></rect>
+        <rect id="Nutrition-Bar-4" fill="#0E1B21" x="340" y="465" width="120" height="10" rx="5"></rect>
+        <rect id="Nutrition-Bar-4-Fill" fill="#9FB9CB" x="340" y="465" width="40" height="10" rx="5"></rect>
+        
+        <!-- Floating Food Items -->
+        <!-- Apple -->
+        <circle id="Apple" fill="#D0E3F9" cx="200" cy="200" r="30"></circle>
+        <path d="M200,180 C205,175 210,175 215,180" id="Apple-Stem" stroke="#617C8C" stroke-width="2"></path>
+        
+        <!-- Broccoli -->
+        <circle id="Broccoli-Base" fill="#617C8C" cx="550" cy="250" r="20"></circle>
+        <circle id="Broccoli-Top-1" fill="#9FB9CB" cx="540" cy="235" r="15"></circle>
+        <circle id="Broccoli-Top-2" fill="#9FB9CB" cx="555" cy="230" r="15"></circle>
+        <circle id="Broccoli-Top-3" fill="#9FB9CB" cx="570" cy="235" r="15"></circle>
+        
+        <!-- Carrot -->
+        <path d="M150,350 L170,300 L190,350 Z" id="Carrot" fill="#D0E3F9"></path>
+        <path d="M170,300 L170,280" id="Carrot-Top-1" stroke="#617C8C" stroke-width="2"></path>
+        <path d="M170,300 L160,280" id="Carrot-Top-2" stroke="#617C8C" stroke-width="2"></path>
+        <path d="M170,300 L180,280" id="Carrot-Top-3" stroke="#617C8C" stroke-width="2"></path>
+        
+        <!-- Banana -->
+        <path d="M600,400 C630,380 650,400 630,420 C610,440 580,420 600,400 Z" id="Banana" fill="#D0E3F9"></path>
+        
+        <!-- Scan Animation Elements -->
+        <rect id="Scan-Line" fill="#D0E3F9" opacity="0.7" x="310" y="250" width="180" height="2"></rect>
+        <circle id="Scan-Dot-1" fill="#D0E3F9" opacity="0.7" cx="320" cy="250" r="4"></circle>
+        <circle id="Scan-Dot-2" fill="#D0E3F9" opacity="0.7" cx="480" cy="250" r="4"></circle>
+        
+        <!-- Decorative Elements -->
+        <circle id="Decorative-Circle-1" stroke="#9FB9CB" stroke-width="2" opacity="0.5" cx="150" cy="150" r="40"></circle>
+        <circle id="Decorative-Circle-2" stroke="#617C8C" stroke-width="2" opacity="0.5" cx="650" cy="450" r="50"></circle>
+        <path d="M250,500 L350,450 L450,500 L550,450 L650,500" id="Decorative-Wave" stroke="#D0E3F9" stroke-width="3" opacity="0.3" stroke-linecap="round" stroke-linejoin="round"></path>
+    </g>
+</svg>
