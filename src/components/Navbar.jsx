@@ -92,12 +92,12 @@ const NavbarContainer = styled.nav`
   left: 0;
   width: 100%;
   z-index: 1000;
-  background-color: ${props => props.scrolled ? 'rgba(14, 27, 33, 0.95)' : 'rgba(14, 27, 33, 0.8)'};
+  background-color: ${props => props.scrolled ? 'rgba(0, 0, 0, 0.95)' : 'rgba(0, 0, 0, 0.8)'};
   box-shadow: ${props => props.scrolled ? '0 2px 10px rgba(0, 0, 0, 0.3)' : '0 1px 5px rgba(0, 0, 0, 0.2)'};
   padding: ${props => props.scrolled ? '10px 0' : '15px 0'};
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
-  border-bottom: ${props => props.scrolled ? '1px solid rgba(159, 185, 203, 0.3)' : 'none'};
+  border-bottom: ${props => props.scrolled ? '1px solid rgba(255, 105, 180, 0.3)' : 'none'};
 `;
 
 const NavbarContent = styled.div`
@@ -115,7 +115,7 @@ const Logo = styled(Link)`
 `;
 
 const LogoSpan = styled.span`
-  color: var(--light-blue);
+  color: var(--hot-pink);
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 `;
 
@@ -133,12 +133,12 @@ const NavLinks = styled.ul`
     width: 70%;
     height: calc(100vh - 60px);
     flex-direction: column;
-    background-color: var(--dark-blue);
+    background-color: var(--black);
     box-shadow: -2px 0 10px rgba(0, 0, 0, 0.5);
     padding: 2rem;
     transition: right 0.3s ease;
     align-items: flex-start;
-    border-left: 1px solid rgba(159, 185, 203, 0.2);
+    border-left: 1px solid rgba(255, 105, 180, 0.2);
 
     &.active {
       right: 0;
@@ -176,8 +176,8 @@ const NavLink = styled(Link)`
 
 const LoginButton = styled(Link)`
   background-color: transparent;
-  border: 2px solid var(--light-blue);
-  color: var(--light-blue);
+  border: 2px solid var(--hot-pink);
+  color: var(--hot-pink);
   padding: 8px 20px;
   border-radius: var(--border-radius);
   font-weight: 600;
@@ -187,8 +187,8 @@ const LoginButton = styled(Link)`
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 
   &:hover {
-    background-color: var(--light-blue);
-    color: var(--very-dark-blue);
+    background-color: var(--hot-pink);
+    color: var(--light-gray);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }
 

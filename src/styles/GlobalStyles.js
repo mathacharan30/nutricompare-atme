@@ -2,41 +2,41 @@ import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyles = createGlobalStyle`
   :root {
-    /* Color Palette - Blue Theme */
-    --light-blue: #D0E3F9;
-    --medium-blue: #9FB9CB;
-    --steel-blue: #617C8C;
-    --dark-blue: #2D404E;
-    --very-dark-blue: #0E1B21;
+    /* Color Palette - Pink Theme */
+    --hot-pink: #FF69B4;
+    --light-pink: #FF98C9;
+    --pale-pink: #FFC7DE;
+    --light-gray: #F0F0F0;
+    --black: #000000;
 
     /* Primary Colors */
-    --primary-color: var(--steel-blue);
-    --primary-dark: var(--dark-blue);
-    --primary-light: var(--medium-blue);
-    --secondary-color: var(--very-dark-blue);
-    --accent-color: var(--light-blue);
+    --primary-color: var(--hot-pink);
+    --primary-dark: var(--black);
+    --primary-light: var(--light-pink);
+    --secondary-color: var(--pale-pink);
+    --accent-color: var(--light-gray);
 
     /* Text Colors */
-    --text-dark: #0E1B21;
-    --text-medium: #2D404E;
-    --text-light: #617C8C;
+    --text-dark: #000000;
+    --text-medium: #333333;
+    --text-light: #666666;
 
     /* Background Colors */
-    --bg-white: #D0E3F9;
-    --bg-light: #9FB9CB;
-    --bg-gray: #617C8C;
+    --bg-white: #F0F0F0;
+    --bg-light: #FFC7DE;
+    --bg-gray: #FF98C9;
 
     /* Health Score Colors */
-    --score-excellent: var(--light-blue);
+    --score-excellent: var(--hot-pink);
     --score-good: #8BC34A;
     --score-moderate: #FFC107;
-    --score-poor: var(--dark-blue);
+    --score-poor: var(--black);
     --score-bad: #F44336;
 
     /* Gradient Backgrounds */
-    --gradient-primary: linear-gradient(135deg, var(--steel-blue) 0%, var(--dark-blue) 100%);
-    --gradient-light: linear-gradient(135deg, var(--medium-blue) 0%, var(--steel-blue) 100%);
-    --gradient-dark: linear-gradient(135deg, var(--dark-blue) 0%, var(--very-dark-blue) 100%);
+    --gradient-primary: linear-gradient(135deg, var(--hot-pink) 0%, var(--black) 100%);
+    --gradient-light: linear-gradient(135deg, var(--light-pink) 0%, var(--hot-pink) 100%);
+    --gradient-dark: linear-gradient(135deg, var(--black) 0%, #333333 100%);
 
     /* Other */
     --border-radius: 8px;
@@ -52,26 +52,26 @@ const GlobalStyles = createGlobalStyle`
     --text-light: #b0b0b0;
 
     /* Background Colors - Adjusted for better contrast */
-    --bg-white: #0E1B21;
-    --bg-light: #2D404E;
-    --bg-gray: #617C8C;
+    --bg-white: #000000;
+    --bg-light: #333333;
+    --bg-gray: #666666;
 
     /* Adjusted Palette for Dark Mode - Brighter colors for better visibility */
-    --light-blue-dm: #D0E3F9;
-    --medium-blue-dm: #9FB9CB;
-    --steel-blue-dm: #617C8C;
-    --dark-blue-dm: #2D404E;
-    --very-dark-blue-dm: #0E1B21;
+    --hot-pink-dm: #FF69B4;
+    --light-pink-dm: #FF98C9;
+    --pale-pink-dm: #FFC7DE;
+    --light-gray-dm: #F0F0F0;
+    --black-dm: #000000;
 
     /* Primary Colors (Dark Mode) */
-    --primary-color: var(--steel-blue-dm);
-    --primary-dark: var(--dark-blue-dm);
-    --primary-light: var(--medium-blue-dm);
+    --primary-color: var(--hot-pink-dm);
+    --primary-dark: var(--black-dm);
+    --primary-light: var(--light-pink-dm);
 
     /* Gradient Backgrounds (Dark Mode) */
-    --gradient-primary: linear-gradient(135deg, var(--steel-blue-dm) 0%, var(--dark-blue-dm) 100%);
-    --gradient-light: linear-gradient(135deg, var(--medium-blue-dm) 0%, var(--steel-blue-dm) 100%);
-    --gradient-dark: linear-gradient(135deg, var(--dark-blue-dm) 0%, var(--very-dark-blue-dm) 100%);
+    --gradient-primary: linear-gradient(135deg, var(--hot-pink-dm) 0%, var(--black-dm) 100%);
+    --gradient-light: linear-gradient(135deg, var(--light-pink-dm) 0%, var(--hot-pink-dm) 100%);
+    --gradient-dark: linear-gradient(135deg, #333333 0%, var(--black-dm) 100%);
 
     /* Box Shadow for Dark Mode */
     --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);

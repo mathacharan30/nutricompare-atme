@@ -23,7 +23,7 @@ export const Button = styled.button`
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(45deg, rgba(239, 136, 173, 0.2) 0%, rgba(165, 56, 96, 0.3) 100%);
+    background: linear-gradient(45deg, rgba(255, 152, 201, 0.2) 0%, rgba(255, 105, 180, 0.3) 100%);
     z-index: -1;
     transform: scaleX(0);
     transform-origin: right;
@@ -83,7 +83,7 @@ export const PrimaryButton = styled(Button)`
 
   &:hover {
     color: white;
-    box-shadow: 0 15px 25px rgba(165, 56, 96, 0.3);
+    box-shadow: 0 15px 25px rgba(255, 105, 180, 0.3);
   }
 
   &:hover::before {
@@ -91,28 +91,28 @@ export const PrimaryButton = styled(Button)`
   }
 
   &:active {
-    box-shadow: 0 5px 15px rgba(165, 56, 96, 0.2);
+    box-shadow: 0 5px 15px rgba(255, 105, 180, 0.2);
   }
 `;
 
 // Outline Button
 export const OutlineButton = styled(Button)`
   background-color: transparent;
-  border: 2px solid var(--rose);
-  color: var(--rose);
-  box-shadow: 0 4px 10px rgba(165, 56, 96, 0.1);
+  border: 2px solid var(--hot-pink);
+  color: var(--hot-pink);
+  box-shadow: 0 4px 10px rgba(255, 105, 180, 0.1);
 
   &::before {
-    background: linear-gradient(45deg, rgba(239, 136, 173, 0.1) 0%, rgba(165, 56, 96, 0.2) 100%);
+    background: linear-gradient(45deg, rgba(255, 152, 201, 0.1) 0%, rgba(255, 105, 180, 0.2) 100%);
     opacity: 0;
     transition: opacity 0.4s ease;
     transform: scaleX(1);
   }
 
   &:hover {
-    color: var(--burgundy);
-    border-color: var(--burgundy);
-    box-shadow: 0 15px 25px rgba(165, 56, 96, 0.2);
+    color: var(--black);
+    border-color: var(--black);
+    box-shadow: 0 15px 25px rgba(255, 105, 180, 0.2);
   }
 
   &:hover::before {
@@ -120,7 +120,7 @@ export const OutlineButton = styled(Button)`
   }
 
   &:active {
-    box-shadow: 0 5px 15px rgba(165, 56, 96, 0.1);
+    box-shadow: 0 5px 15px rgba(255, 105, 180, 0.1);
   }
 `;
 
@@ -138,8 +138,8 @@ export const ThemeToggle = styled.button`
   position: relative;
   overflow: hidden;
   margin-left: 10px;
-  background-color: var(--burgundy-dark-dm);
-  box-shadow: inset 0 0 0 2px var(--pink-dm), 0 0 10px rgba(255, 168, 205, 0.4);
+  background-color: var(--black-dm);
+  box-shadow: inset 0 0 0 2px var(--hot-pink-dm), 0 0 10px rgba(255, 105, 180, 0.4);
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   z-index: 1000;
 
@@ -150,16 +150,16 @@ export const ThemeToggle = styled.button`
   .sun-icon {
     position: absolute;
     font-size: 1.2rem;
-    color: var(--pink-dm);
+    color: var(--hot-pink-dm);
     opacity: 1;
     transform: translateY(0) rotate(0);
     transition: all 0.3s ease;
-    text-shadow: 0 0 5px rgba(255, 168, 205, 0.5);
+    text-shadow: 0 0 5px rgba(255, 105, 180, 0.5);
   }
 
   .moon-icon {
     font-size: 1.2rem;
-    color: var(--pink-dm);
+    color: var(--hot-pink-dm);
     opacity: 0;
     transform: translateY(-20px) rotate(-90deg);
     transition: all 0.3s ease;

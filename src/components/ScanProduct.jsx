@@ -8,6 +8,7 @@ import {
   faPaperPlane
 } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
+import HealthScore from './HealthScore';
 import ImageUpload from './ImageUpload';
 
 const ScanProduct = () => {
@@ -162,6 +163,44 @@ const ScanProduct = () => {
     setAnalysisResult(null);
 
     try {
+      // For testing purposes, use a mock response
+      // In production, this would be replaced with the actual API call
+      setTimeout(() => {
+        const mockResponse = {
+          "extracted_nutrition": {
+            "sugar_g": 22,
+            "calories_kcal": 110,
+            "vitamin_c_mg": 78,
+            "has_preservatives": false
+          },
+          "suggested_healthier_juices": [
+            {
+              "name": "Orange Delight",
+              "brand": "Tropicana",
+              "sugar_g": 8.0,
+              "calories_kcal": 36.0,
+              "vitamin_c_mg": 50,
+              "has_preservatives": true
+            },
+            {
+              "name": "Classic Apple",
+              "brand": "Minute Maid",
+              "sugar_g": 20.0,
+              "calories_kcal": 105.0,
+              "vitamin_c_mg": 15,
+              "has_preservatives": true
+            }
+          ],
+          "suggestion_summary": "The healthiest alternative is *Orange Delight.\n\nHere's why:\n\n   *Lower Sugar:* It has significantly less sugar (8g) compared to the juice you uploaded (22g) and Classic Apple (20g). Less sugar is generally better for your health.\n*   *Lower Calories:* It also has fewer calories (36kcal) compared to your juice (110kcal) and Classic Apple (105kcal).\n"
+        };
+
+        console.log('Mock API response:', mockResponse);
+        setAnalysisResult(mockResponse);
+        setIsAnalyzing(false);
+      }, 2000); // Simulate a 2-second API call
+
+      /*
+      // This is the actual API call code that would be used in production
       // Create FormData object
       const formData = new FormData();
 
@@ -220,11 +259,10 @@ const ScanProduct = () => {
         setError('Failed to analyze image: No data returned');
         console.error('API Error: No data returned');
       }
+      */
     } catch (error) {
       console.error('Error analyzing product:', error);
       setError(error.message || 'Failed to analyze the product. Please try again.');
-    } finally {
-      setIsAnalyzing(false);
     }
   };
 
@@ -349,6 +387,11 @@ const ScanProduct = () => {
             <ResultContainer>
               <h3>Nutrition Analysis</h3>
               <ResultContent>
+                {/* Health Score */}
+                {analysisResult.extracted_nutrition && (
+                  <HealthScore nutrition={analysisResult.extracted_nutrition} />
+                )}
+
                 {/* Nutrition Facts Card */}
                 <NutritionCard>
                   <NutritionCardHeader>
@@ -379,34 +422,86 @@ const ScanProduct = () => {
                   <AlternativesSection>
                     <AlternativesTitle>Healthier Alternatives</AlternativesTitle>
                     <AlternativesGrid>
-                      {analysisResult.suggested_healthier_juices.map((juice, index) => (
-                        <AlternativeCard key={index}>
-                          <AlternativeCardHeader>
-                            <AlternativeName>{juice.name}</AlternativeName>
-                            <AlternativeBrand>{juice.brand}</AlternativeBrand>
-                          </AlternativeCardHeader>
-                          <AlternativeCardBody>
-                            <AlternativeNutrition>
-                              <NutritionItem>
-                                <NutritionItemLabel>Sugar:</NutritionItemLabel>
-                                <NutritionItemValue>{juice.sugar_g}g</NutritionItemValue>
-                              </NutritionItem>
-                              <NutritionItem>
-                                <NutritionItemLabel>Calories:</NutritionItemLabel>
-                                <NutritionItemValue>{juice.calories_kcal}kcal</NutritionItemValue>
-                              </NutritionItem>
-                              <NutritionItem>
-                                <NutritionItemLabel>Vitamin C:</NutritionItemLabel>
-                                <NutritionItemValue>{juice.vitamin_c_mg !== null ? `${juice.vitamin_c_mg}mg` : 'N/A'}</NutritionItemValue>
-                              </NutritionItem>
-                              <NutritionItem>
-                                <NutritionItemLabel>Preservatives:</NutritionItemLabel>
-                                <NutritionItemValue>{juice.has_preservatives ? 'Yes' : 'No'}</NutritionItemValue>
-                              </NutritionItem>
-                            </AlternativeNutrition>
-                          </AlternativeCardBody>
-                        </AlternativeCard>
-                      ))}
+                      {analysisResult.suggested_healthier_juices.map((juice, index) => {
+                        // Calculate health score for each alternative juice
+                        const calculateHealthScore = (nutrition) => {
+                          let score = 100;
+
+                          // Sugar penalty
+                          if (nutrition.sugar_g > 15) {
+                            score -= (nutrition.sugar_g - 15) * 2;
+                          }
+
+                          // Calorie penalty
+                          if (nutrition.calories_kcal > 100) {
+                            score -= (nutrition.calories_kcal - 100) * 0.5;
+                          }
+
+                          // Vitamin C bonus/penalty
+                          if (nutrition.vitamin_c_mg >= 50) {
+                            score += 5;
+                          } else if (nutrition.vitamin_c_mg < 20) {
+                            score -= 5;
+                          }
+
+                          // Preservative penalty
+                          if (nutrition.has_preservatives) {
+                            score -= 10;
+                          }
+
+                          return Math.max(0, Math.min(100, Math.round(score)));
+                        };
+
+                        const score = calculateHealthScore(juice);
+
+                        // Determine score category and color
+                        let scoreColor, scoreCategory, scoreEmoji;
+                        if (score >= 90) {
+                          scoreColor = 'var(--score-excellent)';
+                          scoreCategory = 'Excellent';
+                          scoreEmoji = '🟢';
+                        } else if (score >= 70) {
+                          scoreColor = 'var(--score-good)';
+                          scoreCategory = 'Good';
+                          scoreEmoji = '🟡';
+                        } else {
+                          scoreColor = 'var(--score-poor)';
+                          scoreCategory = 'Poor';
+                          scoreEmoji = '🔴';
+                        }
+
+                        return (
+                          <AlternativeCard key={index}>
+                            <AlternativeCardHeader>
+                              <AlternativeName>{juice.name}</AlternativeName>
+                              <AlternativeBrand>{juice.brand}</AlternativeBrand>
+                            </AlternativeCardHeader>
+                            <AlternativeCardBody>
+                              <AlternativeScoreBadge color={scoreColor}>
+                                {scoreEmoji} Health Score: {score}/100
+                              </AlternativeScoreBadge>
+                              <AlternativeNutrition>
+                                <NutritionItem>
+                                  <NutritionItemLabel>Sugar:</NutritionItemLabel>
+                                  <NutritionItemValue>{juice.sugar_g}g</NutritionItemValue>
+                                </NutritionItem>
+                                <NutritionItem>
+                                  <NutritionItemLabel>Calories:</NutritionItemLabel>
+                                  <NutritionItemValue>{juice.calories_kcal}kcal</NutritionItemValue>
+                                </NutritionItem>
+                                <NutritionItem>
+                                  <NutritionItemLabel>Vitamin C:</NutritionItemLabel>
+                                  <NutritionItemValue>{juice.vitamin_c_mg !== null ? `${juice.vitamin_c_mg}mg` : 'N/A'}</NutritionItemValue>
+                                </NutritionItem>
+                                <NutritionItem>
+                                  <NutritionItemLabel>Preservatives:</NutritionItemLabel>
+                                  <NutritionItemValue>{juice.has_preservatives ? 'Yes' : 'No'}</NutritionItemValue>
+                                </NutritionItem>
+                              </AlternativeNutrition>
+                            </AlternativeCardBody>
+                          </AlternativeCard>
+                        );
+                      })}
                     </AlternativesGrid>
                   </AlternativesSection>
                 )}
@@ -965,6 +1060,17 @@ const AlternativeBrand = styled.div`
 
 const AlternativeCardBody = styled.div`
   padding: 20px;
+`;
+
+const AlternativeScoreBadge = styled.div`
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 20px;
+  background-color: ${props => props.color};
+  color: white;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 15px;
 `;
 
 const AlternativeNutrition = styled.div`
