@@ -5,17 +5,18 @@ import {
   faUpload,
   faCamera,
   faBarcode,
-  faCloudUploadAlt,
   faPaperPlane
 } from '@fortawesome/free-solid-svg-icons';
+import { fetchData } from '../services/api';
+import ImageUpload from './ImageUpload';
 
 const ScanProduct = () => {
   const [activeMethod, setActiveMethod] = useState('upload');
   const [previewImage, setPreviewImage] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState(null);
+  const [error, setError] = useState(null);
 
-  const fileInputRef = useRef(null);
-  const dropAreaRef = useRef(null);
   const cameraFeedRef = useRef(null);
   const cameraCanvasRef = useRef(null);
   const barcodeFeedRef = useRef(null);
@@ -89,85 +90,6 @@ const ScanProduct = () => {
     console.log('Barcode scanner initialized');
   };
 
-  // Handle file upload
-  const handleFileUpload = (files) => {
-    if (files.length > 0) {
-      const file = files[0];
-      if (file.type.match('image.*')) {
-        const reader = new FileReader();
-
-        reader.onload = function(e) {
-          setPreviewImage(e.target.result);
-        };
-
-        reader.readAsDataURL(file);
-      } else {
-        alert('Please upload an image file');
-      }
-    }
-  };
-
-  // Handle file input change
-  const handleFileInputChange = (e) => {
-    handleFileUpload(e.target.files);
-  };
-
-  // Handle drag and drop
-  useEffect(() => {
-    const dropArea = dropAreaRef.current;
-
-    if (dropArea) {
-      const preventDefaults = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-      };
-
-      const highlight = () => {
-        dropArea.classList.add('highlight');
-      };
-
-      const unhighlight = () => {
-        dropArea.classList.remove('highlight');
-      };
-
-      const handleDrop = (e) => {
-        const dt = e.dataTransfer;
-        const files = dt.files;
-        handleFileUpload(files);
-      };
-
-      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-        dropArea.addEventListener(eventName, preventDefaults, false);
-      });
-
-      ['dragenter', 'dragover'].forEach(eventName => {
-        dropArea.addEventListener(eventName, highlight, false);
-      });
-
-      ['dragleave', 'drop'].forEach(eventName => {
-        dropArea.addEventListener(eventName, unhighlight, false);
-      });
-
-      dropArea.addEventListener('drop', handleDrop, false);
-
-      return () => {
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-          dropArea.removeEventListener(eventName, preventDefaults, false);
-        });
-
-        ['dragenter', 'dragover'].forEach(eventName => {
-          dropArea.removeEventListener(eventName, highlight, false);
-        });
-
-        ['dragleave', 'drop'].forEach(eventName => {
-          dropArea.removeEventListener(eventName, unhighlight, false);
-        });
-
-        dropArea.removeEventListener('drop', handleDrop, false);
-      };
-    }
-  }, []);
-
   // Add 3D tilt effect to scan options
   useEffect(() => {
     const options = scanOptionsRef.current;
@@ -219,28 +141,80 @@ const ScanProduct = () => {
     return () => {
       options.forEach(option => {
         if (option) {
-          option.removeEventListener('mousemove', () => {});
-          option.removeEventListener('mouseleave', () => {});
+          option.removeEventListener('mousemove', () => { });
+          option.removeEventListener('mouseleave', () => { });
         }
       });
     };
   }, []);
 
   // Analyze product
-  const analyzeProduct = () => {
+  const analyzeProduct = async () => {
     if (!previewImage && activeMethod !== 'barcode') {
       alert('Please upload or capture an image first');
       return;
     }
 
     setIsAnalyzing(true);
+    setError(null);
+    setAnalysisResult(null);
 
-    // Simulate API call delay
-    setTimeout(() => {
+    try {
+      // Create FormData object
+      const formData = new FormData();
+
+      // Convert base64 to blob
+      const base64Data = previewImage.split(',')[1]; // Remove the data URL prefix
+      const byteCharacters = atob(base64Data);
+      const byteArrays = [];
+
+      for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+        const slice = byteCharacters.slice(offset, offset + 512);
+        const byteNumbers = new Array(slice.length);
+
+        for (let i = 0; i < slice.length; i++) {
+          byteNumbers[i] = slice.charCodeAt(i);
+        }
+
+        const byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
+      }
+
+      const blob = new Blob(byteArrays, { type: 'image/jpeg' });
+      const file = new File([blob], 'image.jpg', { type: 'image/jpeg' });
+
+      // Append the file to FormData
+      formData.append('file', file);
+
+      console.log('Sending request with file:', file);
+
+      const apiResponse = await fetchData(formData);
+
+      // Log the raw response object
+      console.log('Raw response:', apiResponse);
+
+      // Try to parse JSON (for both error and success)
+      let respJson = null;
+      try {
+        respJson = await apiResponse.clone().json();
+        console.log('Parsed JSON response:', respJson);
+      } catch (jsonErr) {
+        console.log('Response is not valid JSON:', jsonErr);
+      }
+
+      if (!apiResponse.ok) {
+        setError(respJson?.message || 'Failed to analyze image');
+        console.error('API Error Response:', respJson);
+        return;
+      }
+
+      setAnalysisResult(respJson);
+    } catch (error) {
+      console.error('Error analyzing product:', error);
+      setError(error.message || 'Failed to analyze the product. Please try again.');
+    } finally {
       setIsAnalyzing(false);
-      // In a real app, you would navigate to results or show results section
-      alert('Product analysis complete! This is a placeholder for the actual analysis functionality.');
-    }, 2000);
+    }
   };
 
   return (
@@ -282,38 +256,10 @@ const ScanProduct = () => {
           <ScanInterface>
             {/* Upload Interface */}
             {activeMethod === 'upload' && (
-              <ScanMethod>
-                <UploadArea ref={dropAreaRef} className={previewImage ? 'has-preview' : ''}>
-                  {!previewImage ? (
-                    <UploadForm>
-                      <input
-                        type="file"
-                        ref={fileInputRef}
-                        onChange={handleFileInputChange}
-                        accept="image/*"
-                        className="visually-hidden"
-                      />
-                      <UploadLabel onClick={() => fileInputRef.current.click()}>
-                        <UploadPrompt>
-                          <FontAwesomeIcon icon={faCloudUploadAlt} />
-                          <p>Drag & drop your image here or click to browse</p>
-                          <span className="small">Supported formats: JPG, PNG, JPEG</span>
-                        </UploadPrompt>
-                      </UploadLabel>
-                    </UploadForm>
-                  ) : (
-                    <PreviewContainer>
-                      <img src={previewImage} alt="Preview" />
-                      <button
-                        className="remove-preview"
-                        onClick={() => setPreviewImage(null)}
-                      >
-                        ×
-                      </button>
-                    </PreviewContainer>
-                  )}
-                </UploadArea>
-              </ScanMethod>
+              <ImageUpload
+                previewImage={previewImage}
+                setPreviewImage={setPreviewImage}
+              />
             )}
 
             {/* Camera Interface */}
@@ -379,6 +325,19 @@ const ScanProduct = () => {
               </>
             )}
           </AnalyzeButton>
+
+          {error && (
+            <ErrorMessage>
+              {error}
+            </ErrorMessage>
+          )}
+
+          {analysisResult && (
+            <ResultContainer>
+              <h3>Analysis Results</h3>
+              <pre>{JSON.stringify(analysisResult, null, 2)}</pre>
+            </ResultContainer>
+          )}
         </ScanContainer>
       </div>
     </ScanSection>
@@ -555,100 +514,6 @@ const ScanInterface = styled.div`
 
 const ScanMethod = styled.div`
   width: 100%;
-`;
-
-const UploadArea = styled.div`
-  border: 2px dashed var(--primary-light);
-  border-radius: var(--border-radius);
-  padding: 20px;
-  text-align: center;
-  transition: all 0.3s ease;
-  background-color: var(--bg-light);
-  min-height: 300px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &.highlight {
-    border-color: var(--primary-color);
-    background-color: rgba(239, 136, 173, 0.1);
-  }
-
-  &.has-preview {
-    border-style: solid;
-    padding: 0;
-    overflow: hidden;
-  }
-`;
-
-const UploadForm = styled.form`
-  width: 100%;
-`;
-
-const UploadLabel = styled.label`
-  cursor: pointer;
-  display: block;
-  width: 100%;
-`;
-
-const UploadPrompt = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  svg {
-    font-size: 3rem;
-    color: var(--primary-light);
-    margin-bottom: 15px;
-  }
-
-  p {
-    font-size: 1.1rem;
-    color: var(--text-medium);
-    margin-bottom: 10px;
-  }
-
-  .small {
-    font-size: 0.8rem;
-    color: var(--text-light);
-  }
-`;
-
-const PreviewContainer = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100%;
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    max-height: 300px;
-  }
-
-  .remove-preview {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:hover {
-      background-color: rgba(0, 0, 0, 0.7);
-      transform: scale(1.1);
-    }
-  }
 `;
 
 const CameraContainer = styled.div`
@@ -828,6 +693,37 @@ const AnalyzeButton = styled.button`
         transform: rotate(360deg);
       }
     }
+  }
+`;
+
+const ErrorMessage = styled.div`
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #ffebee;
+  color: #c62828;
+  border-radius: var(--border-radius);
+  text-align: center;
+`;
+
+const ResultContainer = styled.div`
+  margin-top: 20px;
+  padding: 20px;
+  background-color: var(--bg-light);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+
+  h3 {
+    margin-bottom: 15px;
+    color: var(--text-dark);
+  }
+
+  pre {
+    background-color: white;
+    padding: 15px;
+    border-radius: var(--border-radius);
+    overflow-x: auto;
+    font-size: 0.9rem;
+    line-height: 1.5;
   }
 `;
 
