@@ -7,7 +7,7 @@ import {
   faBarcode,
   faPaperPlane
 } from '@fortawesome/free-solid-svg-icons';
-import { fetchData } from '../services/api';
+import axios from 'axios';
 import ImageUpload from './ImageUpload';
 
 const ScanProduct = () => {
@@ -21,6 +21,8 @@ const ScanProduct = () => {
   const cameraCanvasRef = useRef(null);
   const barcodeFeedRef = useRef(null);
   const scanOptionsRef = useRef([]);
+  const fileInputRef = useRef(null);
+  const [selectedFile, setSelectedFile] = useState(null);
 
   // Handle scan method change
   const changeMethod = (method) => {
@@ -163,52 +165,61 @@ const ScanProduct = () => {
       // Create FormData object
       const formData = new FormData();
 
-      // Convert base64 to blob
-      const base64Data = previewImage.split(',')[1]; // Remove the data URL prefix
-      const byteCharacters = atob(base64Data);
-      const byteArrays = [];
+      let originalFile;
 
-      for (let offset = 0; offset < byteCharacters.length; offset += 512) {
-        const slice = byteCharacters.slice(offset, offset + 512);
-        const byteNumbers = new Array(slice.length);
+      // For uploaded files, use the selected file directly
+      if (selectedFile) {
+        // Rename the file to 'originalFile' while keeping its type
+        originalFile = new File([selectedFile], 'originalFile', { type: selectedFile.type });
+        formData.append('file', originalFile);
+        console.log('Sending uploaded file:', originalFile);
+      }
+      // For camera captures, we need to convert the data URL to a file
+      else if (previewImage && previewImage.startsWith('data:image')) {
+        // Extract the MIME type from the data URL
+        const mimeType = previewImage.split(';')[0].split(':')[1];
 
-        for (let i = 0; i < slice.length; i++) {
-          byteNumbers[i] = slice.charCodeAt(i);
+        // Convert data URL to blob
+        const byteString = atob(previewImage.split(',')[1]);
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+
+        for (let i = 0; i < byteString.length; i++) {
+          ia[i] = byteString.charCodeAt(i);
         }
 
-        const byteArray = new Uint8Array(byteNumbers);
-        byteArrays.push(byteArray);
+        const blob = new Blob([ab], { type: mimeType });
+        originalFile = new File([blob], 'originalFile', { type: mimeType });
+
+        formData.append('file', originalFile);
+        console.log('Sending camera capture:', originalFile);
+      } else {
+        throw new Error('No image file available');
       }
 
-      const blob = new Blob(byteArrays, { type: 'image/jpeg' });
-      const file = new File([blob], 'image.jpg', { type: 'image/jpeg' });
+      // Send the file directly to the /analyze endpoint using axios
+      const response = await axios.post(
+        '/analyze',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+      );
 
-      // Append the file to FormData
-      formData.append('file', file);
+      const apiResponse = response.data;
 
-      console.log('Sending request with file:', file);
+      // Log the response
+      console.log('API response:', apiResponse);
 
-      const apiResponse = await fetchData(formData);
-
-      // Log the raw response object
-      console.log('Raw response:', apiResponse);
-
-      // Try to parse JSON (for both error and success)
-      let respJson = null;
-      try {
-        respJson = await apiResponse.clone().json();
-        console.log('Parsed JSON response:', respJson);
-      } catch (jsonErr) {
-        console.log('Response is not valid JSON:', jsonErr);
+      // If the response is already parsed JSON (from axios)
+      if (apiResponse) {
+        setAnalysisResult(apiResponse);
+      } else {
+        setError('Failed to analyze image: No data returned');
+        console.error('API Error: No data returned');
       }
-
-      if (!apiResponse.ok) {
-        setError(respJson?.message || 'Failed to analyze image');
-        console.error('API Error Response:', respJson);
-        return;
-      }
-
-      setAnalysisResult(respJson);
     } catch (error) {
       console.error('Error analyzing product:', error);
       setError(error.message || 'Failed to analyze the product. Please try again.');
@@ -259,6 +270,8 @@ const ScanProduct = () => {
               <ImageUpload
                 previewImage={previewImage}
                 setPreviewImage={setPreviewImage}
+                onFileSelect={setSelectedFile}
+                ref={fileInputRef}
               />
             )}
 
@@ -334,8 +347,82 @@ const ScanProduct = () => {
 
           {analysisResult && (
             <ResultContainer>
-              <h3>Analysis Results</h3>
-              <pre>{JSON.stringify(analysisResult, null, 2)}</pre>
+              <h3>Nutrition Analysis</h3>
+              <ResultContent>
+                {/* Nutrition Facts Card */}
+                <NutritionCard>
+                  <NutritionCardHeader>
+                    <NutritionCardTitle>Your Juice Nutrition Facts</NutritionCardTitle>
+                  </NutritionCardHeader>
+                  <NutritionCardBody>
+                    {analysisResult.extracted_nutrition && (
+                      <NutritionTable>
+                        {Object.entries(analysisResult.extracted_nutrition).map(([key, value]) => (
+                          <NutritionRow key={key}>
+                            <NutritionLabel>
+                              {key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                            </NutritionLabel>
+                            <NutritionValue>
+                              {typeof value === 'boolean'
+                                ? (value ? 'Yes' : 'No')
+                                : `${value}${key.includes('sugar') ? 'g' : key.includes('calories') ? 'kcal' : key.includes('vitamin') ? 'mg' : ''}`}
+                            </NutritionValue>
+                          </NutritionRow>
+                        ))}
+                      </NutritionTable>
+                    )}
+                  </NutritionCardBody>
+                </NutritionCard>
+
+                {/* Healthier Alternatives */}
+                {analysisResult.suggested_healthier_juices && analysisResult.suggested_healthier_juices.length > 0 && (
+                  <AlternativesSection>
+                    <AlternativesTitle>Healthier Alternatives</AlternativesTitle>
+                    <AlternativesGrid>
+                      {analysisResult.suggested_healthier_juices.map((juice, index) => (
+                        <AlternativeCard key={index}>
+                          <AlternativeCardHeader>
+                            <AlternativeName>{juice.name}</AlternativeName>
+                            <AlternativeBrand>{juice.brand}</AlternativeBrand>
+                          </AlternativeCardHeader>
+                          <AlternativeCardBody>
+                            <AlternativeNutrition>
+                              <NutritionItem>
+                                <NutritionItemLabel>Sugar:</NutritionItemLabel>
+                                <NutritionItemValue>{juice.sugar_g}g</NutritionItemValue>
+                              </NutritionItem>
+                              <NutritionItem>
+                                <NutritionItemLabel>Calories:</NutritionItemLabel>
+                                <NutritionItemValue>{juice.calories_kcal}kcal</NutritionItemValue>
+                              </NutritionItem>
+                              <NutritionItem>
+                                <NutritionItemLabel>Vitamin C:</NutritionItemLabel>
+                                <NutritionItemValue>{juice.vitamin_c_mg !== null ? `${juice.vitamin_c_mg}mg` : 'N/A'}</NutritionItemValue>
+                              </NutritionItem>
+                              <NutritionItem>
+                                <NutritionItemLabel>Preservatives:</NutritionItemLabel>
+                                <NutritionItemValue>{juice.has_preservatives ? 'Yes' : 'No'}</NutritionItemValue>
+                              </NutritionItem>
+                            </AlternativeNutrition>
+                          </AlternativeCardBody>
+                        </AlternativeCard>
+                      ))}
+                    </AlternativesGrid>
+                  </AlternativesSection>
+                )}
+
+                {/* Suggestion Summary */}
+                {analysisResult.suggestion_summary && (
+                  <SummarySection>
+                    <SummaryTitle>Recommendation</SummaryTitle>
+                    <SummaryContent>
+                      {analysisResult.suggestion_summary.split('\n').map((paragraph, index) => (
+                        paragraph.trim() ? <SummaryParagraph key={index}>{paragraph}</SummaryParagraph> : null
+                      ))}
+                    </SummaryContent>
+                  </SummarySection>
+                )}
+              </ResultContent>
             </ResultContainer>
           )}
         </ScanContainer>
@@ -706,7 +793,7 @@ const ErrorMessage = styled.div`
 `;
 
 const ResultContainer = styled.div`
-  margin-top: 20px;
+  margin-top: 30px;
   padding: 20px;
   background-color: var(--bg-light);
   border-radius: var(--border-radius);
@@ -714,16 +801,226 @@ const ResultContainer = styled.div`
 
   h3 {
     margin-bottom: 15px;
-    color: var(--text-dark);
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    text-align: center;
+    position: relative;
+
+    &:after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background-color: var(--primary-color);
+    }
   }
 
   pre {
-    background-color: white;
+    background-color: var(--bg-white);
     padding: 15px;
-    border-radius: var(--border-radius);
+    border-radius: 5px;
     overflow-x: auto;
     font-size: 0.9rem;
-    line-height: 1.5;
+    color: var(--text-dark);
+  }
+`;
+
+const ResultContent = styled.div`
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+`;
+
+// Nutrition Card Styles
+const NutritionCard = styled.div`
+  background-color: var(--bg-white);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+`;
+
+const NutritionCardHeader = styled.div`
+  background: var(--gradient-primary);
+  padding: 15px 20px;
+  color: white;
+`;
+
+const NutritionCardTitle = styled.h4`
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+`;
+
+const NutritionCardBody = styled.div`
+  padding: 20px;
+`;
+
+const NutritionTable = styled.div`
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+`;
+
+const NutritionRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 15px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+  &:nth-child(odd) {
+    background-color: rgba(0, 0, 0, 0.02);
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+`;
+
+const NutritionLabel = styled.div`
+  font-weight: 500;
+  color: var(--text-dark);
+`;
+
+const NutritionValue = styled.div`
+  font-weight: 600;
+  color: var(--primary-color);
+`;
+
+// Alternatives Section Styles
+const AlternativesSection = styled.div`
+  margin-top: 10px;
+`;
+
+const AlternativesTitle = styled.h4`
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+  color: var(--text-dark);
+  position: relative;
+  display: inline-block;
+
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 40px;
+    height: 3px;
+    background-color: var(--primary-color);
+  }
+`;
+
+const AlternativesGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+
+  @media (max-width: 576px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const AlternativeCard = styled.div`
+  background-color: var(--bg-white);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+`;
+
+const AlternativeCardHeader = styled.div`
+  background: var(--gradient-light);
+  padding: 15px 20px;
+  color: white;
+`;
+
+const AlternativeName = styled.h5`
+  margin: 0 0 5px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+`;
+
+const AlternativeBrand = styled.div`
+  font-size: 0.9rem;
+  opacity: 0.9;
+`;
+
+const AlternativeCardBody = styled.div`
+  padding: 20px;
+`;
+
+const AlternativeNutrition = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+`;
+
+const NutritionItem = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const NutritionItemLabel = styled.span`
+  font-size: 0.8rem;
+  color: var(--text-medium);
+  margin-bottom: 5px;
+`;
+
+const NutritionItemValue = styled.span`
+  font-weight: 600;
+  color: var(--primary-color);
+  font-size: 1rem;
+`;
+
+// Summary Section Styles
+const SummarySection = styled.div`
+  background-color: var(--bg-white);
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  margin-top: 10px;
+  border-left: 4px solid var(--primary-color);
+`;
+
+const SummaryTitle = styled.h4`
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+  color: var(--text-dark);
+`;
+
+const SummaryContent = styled.div`
+  color: var(--text-medium);
+`;
+
+const SummaryParagraph = styled.p`
+  margin-bottom: 15px;
+  line-height: 1.6;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  strong, b {
+    color: var(--primary-color);
+    font-weight: 600;
   }
 `;
 

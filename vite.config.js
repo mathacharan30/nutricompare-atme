@@ -9,7 +9,7 @@ export default defineConfig({
       "/analyze": {
         target: "https://juice-nutrition-comparator.onrender.com",
         changeOrigin: true,
-        secure: false,
+        secure: true,
         ws: true,
       },
     },

@@ -1,17 +1,20 @@
 import axios from "axios";
 
-// Create axios instance with default config
+// Create axios instance with direct URL
 const api = axios.create({
-  baseURL: "/analyze", // This will use the proxy we set up in vite.config.js
-  headers: {
-    "Content-Type": "application/json",
-  },
+  baseURL: "https://juice-nutrition-comparator.onrender.com",
+  // Don't set Content-Type here as it will be set automatically for FormData
 });
 
-// Example function to fetch data
-export const fetchData = async (data) => {
+// Function to analyze product image
+export const fetchData = async (formData) => {
   try {
-    const response = await api.post("/", data);
+    // Send directly to the /analyze endpoint
+    const response = await api.post("/analyze", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching data:", error);

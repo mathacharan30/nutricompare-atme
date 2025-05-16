@@ -1,9 +1,9 @@
-import { useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons';
 
-const ImageUpload = ({ previewImage, setPreviewImage }) => {
+const ImageUpload = React.forwardRef(({ previewImage, setPreviewImage, onFileSelect }, ref) => {
     const fileInputRef = useRef(null);
     const dropAreaRef = useRef(null);
 
@@ -12,12 +12,16 @@ const ImageUpload = ({ previewImage, setPreviewImage }) => {
         if (files.length > 0) {
             const file = files[0];
             if (file.type.match('image.*')) {
-                const reader = new FileReader();
+                // Store the original file for API upload
+                if (onFileSelect) {
+                    onFileSelect(file);
+                }
 
+                // Create preview
+                const reader = new FileReader();
                 reader.onload = function (e) {
                     setPreviewImage(e.target.result);
                 };
-
                 reader.readAsDataURL(file);
             } else {
                 alert('Please upload an image file');
@@ -86,6 +90,16 @@ const ImageUpload = ({ previewImage, setPreviewImage }) => {
         }
     }, []);
 
+    // Use the forwarded ref or the local ref
+    const inputRef = ref || fileInputRef;
+
+    // Effect to expose the file input to the parent component
+    useEffect(() => {
+        if (ref) {
+            ref.current = fileInputRef.current;
+        }
+    }, [ref]);
+
     return (
         <ScanMethod>
             <UploadArea ref={dropAreaRef} className={previewImage ? 'has-preview' : ''}>
@@ -111,7 +125,12 @@ const ImageUpload = ({ previewImage, setPreviewImage }) => {
                         <img src={previewImage} alt="Preview" />
                         <button
                             className="remove-preview"
-                            onClick={() => setPreviewImage(null)}
+                            onClick={() => {
+                                setPreviewImage(null);
+                                if (onFileSelect) {
+                                    onFileSelect(null);
+                                }
+                            }}
                         >
                             ×
                         </button>
@@ -120,7 +139,7 @@ const ImageUpload = ({ previewImage, setPreviewImage }) => {
             </UploadArea>
         </ScanMethod>
     );
-};
+});
 
 // Styled Components
 const ScanMethod = styled.div`
@@ -221,4 +240,4 @@ const PreviewContainer = styled.div`
   }
 `;
 
-export default ImageUpload; 
+export default ImageUpload;
