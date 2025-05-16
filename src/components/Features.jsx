@@ -9,8 +9,10 @@ import {
   faExclamationTriangle,
   faThumbsUp
 } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next';
 
 const Features = () => {
+  const { t } = useTranslation();
   // Refs for feature cards to add 3D tilt effect
   const featureCardsRef = useRef([]);
 
@@ -66,46 +68,46 @@ const Features = () => {
     };
   }, []);
 
-  // Feature data
+  // Feature data with translation keys
   const featuresData = [
     {
       icon: faCamera,
-      title: "Smart Upload & Scan",
-      description: "Upload and scan food labels or images to automatically extract nutritional information in seconds."
+      titleKey: "features.feature1.title",
+      descriptionKey: "features.feature1.description"
     },
     {
       icon: faRobot,
-      title: "Interactive Nutrition Chatbot",
-      description: "Get instant answers to your nutrition questions and personalized dietary advice."
+      titleKey: "features.feature2.title",
+      descriptionKey: "features.feature2.description"
     },
     {
       icon: faChartPie,
-      title: "Intuitive Nutritional Dashboard",
-      description: "View clear, interactive visualizations of nutritional data to understand your food better."
+      titleKey: "features.feature3.title",
+      descriptionKey: "features.feature3.description"
     },
     {
       icon: faBrain,
-      title: "ML-Based Health Scoring",
-      description: "Our machine learning algorithm rates food healthiness based on multiple nutritional factors."
+      titleKey: "features.feature4.title",
+      descriptionKey: "features.feature4.description"
     },
     {
       icon: faExclamationTriangle,
-      title: "Ingredient Risk Analyzer",
-      description: "Natural Language Processing detects potentially harmful or allergenic ingredients."
+      titleKey: "features.feature5.title",
+      descriptionKey: "features.feature5.description"
     },
     {
       icon: faThumbsUp,
-      title: "Personalized Suggestions",
-      description: "Get recommendations for healthier alternative products based on your preferences."
+      titleKey: "features.feature6.title",
+      descriptionKey: "features.feature6.description"
     }
   ];
 
   return (
     <FeaturesSection id="features">
       <div className="container">
-        <SectionHeader>
-          <h2>Smart Features for Smarter Choices</h2>
-          <p>Discover how NutriCompare helps you make informed decisions about the food you consume</p>
+        <SectionHeader data-aos="fade-up">
+          <h2 data-aos="fade-up" data-aos-delay="100">{t('features.title')}</h2>
+          <p data-aos="fade-up" data-aos-delay="200">{t('features.subtitle')}</p>
         </SectionHeader>
 
         <FeaturesGrid>
@@ -113,12 +115,15 @@ const Features = () => {
             <FeatureCard
               key={index}
               ref={el => featureCardsRef.current[index] = el}
+              data-aos="zoom-in-up"
+              data-aos-delay={200 + (index * 100)}
+              data-aos-duration="800"
             >
               <FeatureIcon className="feature-icon">
                 <FontAwesomeIcon icon={feature.icon} />
               </FeatureIcon>
-              <h3>{feature.title}</h3>
-              <p>{feature.description}</p>
+              <h3>{t(feature.titleKey)}</h3>
+              <p>{t(feature.descriptionKey)}</p>
             </FeatureCard>
           ))}
         </FeaturesGrid>

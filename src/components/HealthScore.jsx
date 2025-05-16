@@ -2,12 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next';
 
 /**
  * HealthScore Component
- * 
+ *
  * Calculates and displays a health score based on juice nutrition values.
- * 
+ *
  * @param {Object} props.nutrition - Object containing nutrition values
  * @param {number} props.nutrition.sugar_g - Sugar content in grams
  * @param {number} props.nutrition.calories_kcal - Calories in kcal
@@ -15,12 +16,14 @@ import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
  * @param {boolean} props.nutrition.has_preservatives - Whether the juice has preservatives
  */
 const HealthScore = ({ nutrition }) => {
+  const { t } = useTranslation();
+
   // Default to 0 if nutrition is not provided
   if (!nutrition) {
     return (
       <ScoreContainer>
-        <ScoreTitle>Health Score</ScoreTitle>
-        <ScoreValue>N/A</ScoreValue>
+        <ScoreTitle>{t('results.health_score')}</ScoreTitle>
+        <ScoreValue>{t('results.na')}</ScoreValue>
         <ScoreMessage>Nutrition data not available</ScoreMessage>
       </ScoreContainer>
     );
@@ -60,9 +63,9 @@ const HealthScore = ({ nutrition }) => {
 
   // Determine score category and color
   const getScoreCategory = (score) => {
-    if (score >= 90) return { category: 'Excellent', color: 'var(--score-excellent)', emoji: '🟢' };
-    if (score >= 70) return { category: 'Good', color: 'var(--score-good)', emoji: '🟡' };
-    return { category: 'Poor', color: 'var(--score-poor)', emoji: '🔴' };
+    if (score >= 90) return { category: t('results.excellent'), color: 'var(--score-excellent)', emoji: '🟢' };
+    if (score >= 70) return { category: t('results.good'), color: 'var(--score-good)', emoji: '🟡' };
+    return { category: t('results.poor'), color: 'var(--score-poor)', emoji: '🔴' };
   };
 
   const { category, color, emoji } = getScoreCategory(score);
@@ -70,67 +73,77 @@ const HealthScore = ({ nutrition }) => {
   // Generate tooltip content explaining the score
   const generateTooltipContent = () => {
     const factors = [];
-    
+
     if (nutrition.sugar_g > 15) {
-      factors.push(`Sugar (${nutrition.sugar_g}g): -${(nutrition.sugar_g - 15) * 2} points`);
+      factors.push(t('health_score.tooltip.sugar_penalty', {
+        value: nutrition.sugar_g,
+        points: (nutrition.sugar_g - 15) * 2
+      }));
     }
-    
+
     if (nutrition.calories_kcal > 100) {
-      factors.push(`Calories (${nutrition.calories_kcal}kcal): -${(nutrition.calories_kcal - 100) * 0.5} points`);
+      factors.push(t('health_score.tooltip.calorie_penalty', {
+        value: nutrition.calories_kcal,
+        points: (nutrition.calories_kcal - 100) * 0.5
+      }));
     }
-    
+
     if (nutrition.vitamin_c_mg >= 50) {
-      factors.push(`Vitamin C (${nutrition.vitamin_c_mg}mg): +5 points`);
+      factors.push(t('health_score.tooltip.vitamin_c_bonus', {
+        value: nutrition.vitamin_c_mg
+      }));
     } else if (nutrition.vitamin_c_mg < 20) {
-      factors.push(`Vitamin C (${nutrition.vitamin_c_mg}mg): -5 points`);
+      factors.push(t('health_score.tooltip.vitamin_c_penalty', {
+        value: nutrition.vitamin_c_mg
+      }));
     }
-    
+
     if (nutrition.has_preservatives) {
-      factors.push('Contains preservatives: -10 points');
+      factors.push(t('health_score.tooltip.preservatives_penalty'));
     }
-    
+
     return factors.join('\\n');
   };
 
   return (
     <ScoreContainer>
       <ScoreHeader>
-        <ScoreTitle>Health Score</ScoreTitle>
+        <ScoreTitle>{t('results.health_score')}</ScoreTitle>
         <Tooltip title={generateTooltipContent()}>
           <FontAwesomeIcon icon={faInfoCircle} />
         </Tooltip>
       </ScoreHeader>
-      
+
       <ScoreDisplay color={color}>
         <ScoreValue>{score}</ScoreValue>
         <ScoreMax>/100</ScoreMax>
       </ScoreDisplay>
-      
+
       <ProgressBarContainer>
         <ProgressBar value={score} max="100" color={color} />
         <ProgressBarLabel>{score}%</ProgressBarLabel>
       </ProgressBarContainer>
-      
+
       <ScoreBadge color={color}>
         {emoji} {category}
       </ScoreBadge>
-      
+
       <ScoreBreakdown>
         <BreakdownItem>
-          <BreakdownLabel>Sugar:</BreakdownLabel>
+          <BreakdownLabel>{t('results.sugar')}:</BreakdownLabel>
           <BreakdownValue>{nutrition.sugar_g}g</BreakdownValue>
         </BreakdownItem>
         <BreakdownItem>
-          <BreakdownLabel>Calories:</BreakdownLabel>
+          <BreakdownLabel>{t('results.calories')}:</BreakdownLabel>
           <BreakdownValue>{nutrition.calories_kcal}kcal</BreakdownValue>
         </BreakdownItem>
         <BreakdownItem>
-          <BreakdownLabel>Vitamin C:</BreakdownLabel>
+          <BreakdownLabel>{t('results.vitamin_c')}:</BreakdownLabel>
           <BreakdownValue>{nutrition.vitamin_c_mg}mg</BreakdownValue>
         </BreakdownItem>
         <BreakdownItem>
-          <BreakdownLabel>Preservatives:</BreakdownLabel>
-          <BreakdownValue>{nutrition.has_preservatives ? 'Yes' : 'No'}</BreakdownValue>
+          <BreakdownLabel>{t('results.preservatives')}:</BreakdownLabel>
+          <BreakdownValue>{nutrition.has_preservatives ? t('results.yes') : t('results.no')}</BreakdownValue>
         </BreakdownItem>
       </ScoreBreakdown>
     </ScoreContainer>
@@ -142,13 +155,13 @@ const ScoreContainer = styled.div`
   background-color: var(--bg-white);
   border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px rgba(122, 37, 124, 0.1);
   margin-bottom: 20px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  
+
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 25px rgba(122, 37, 124, 0.15);
   }
 `;
 
@@ -169,7 +182,7 @@ const Tooltip = styled.div`
   position: relative;
   cursor: help;
   color: var(--text-medium);
-  
+
   &:hover::after {
     content: attr(title);
     position: absolute;
@@ -183,7 +196,7 @@ const Tooltip = styled.div`
     font-size: 0.8rem;
     z-index: 100;
     white-space: pre-line;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 15px rgba(122, 37, 124, 0.2);
   }
 `;
 
@@ -216,18 +229,18 @@ const ProgressBar = styled.progress`
   height: 12px;
   border-radius: 6px;
   overflow: hidden;
-  
+
   &::-webkit-progress-bar {
     background-color: var(--bg-light);
     border-radius: 6px;
   }
-  
+
   &::-webkit-progress-value {
     background-color: ${props => props.color};
     border-radius: 6px;
     transition: width 0.5s ease;
   }
-  
+
   &::-moz-progress-bar {
     background-color: ${props => props.color};
     border-radius: 6px;
@@ -270,7 +283,7 @@ const BreakdownItem = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 8px;
-  
+
   &:last-child {
     margin-bottom: 0;
   }

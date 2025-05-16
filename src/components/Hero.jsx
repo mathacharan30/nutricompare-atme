@@ -2,24 +2,26 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { PrimaryButton, OutlineButton } from '../styles/ButtonStyles';
 import heroImage from '../assets/images/new/hero-image-pink.svg';
+import { useTranslation } from 'react-i18next';
 
 const Hero = () => {
+  const { t } = useTranslation();
+
   return (
     <HeroSection id="home">
       <div className="container">
         <HeroContent>
-          <HeroTextContent>
-            <HeroTitle>Make Healthier Food Choices</HeroTitle>
-            <HeroDescription>
-              Scan any food product to get detailed nutritional information, health scores, and discover
-              <strong> healthier alternatives</strong> in the same category.
+          <HeroTextContent data-aos="fade-right" data-aos-delay="100">
+            <HeroTitle data-aos="fade-up" data-aos-delay="200">{t('hero.title')}</HeroTitle>
+            <HeroDescription data-aos="fade-up" data-aos-delay="300">
+              {t('hero.subtitle')}
             </HeroDescription>
-            <HeroButtons>
-              <PrimaryButton as={Link} to="/scan">Scan Now</PrimaryButton>
-              <OutlineButton as={Link} to="/features">Learn More</OutlineButton>
+            <HeroButtons data-aos="fade-up" data-aos-delay="400">
+              <PrimaryButton as={Link} to="/scan">{t('hero.cta_primary')}</PrimaryButton>
+              <OutlineButton as={Link} to="/features">{t('hero.cta_secondary')}</OutlineButton>
             </HeroButtons>
           </HeroTextContent>
-          <HeroImageContainer>
+          <HeroImageContainer data-aos="fade-left" data-aos-delay="300">
             <HeroImg src={heroImage} alt="Food product scanning illustration" />
           </HeroImageContainer>
         </HeroContent>
@@ -47,7 +49,7 @@ const HeroSection = styled.section`
     right: -50%;
     width: 100%;
     height: 100%;
-    background: radial-gradient(circle, rgba(255, 152, 201, 0.3) 0%, rgba(255, 152, 201, 0) 70%);
+    background: radial-gradient(circle, rgba(122, 37, 124, 0.3) 0%, rgba(122, 37, 124, 0) 70%);
     z-index: 0;
   }
 
@@ -58,7 +60,7 @@ const HeroSection = styled.section`
     left: -30%;
     width: 80%;
     height: 80%;
-    background: radial-gradient(circle, rgba(255, 199, 222, 0.3) 0%, rgba(255, 199, 222, 0) 70%);
+    background: radial-gradient(circle, rgba(70, 31, 63, 0.3) 0%, rgba(70, 31, 63, 0) 70%);
     z-index: 0;
   }
 `;
@@ -144,7 +146,7 @@ const HeroButtons = styled.div`
     left: -30px;
     width: 60px;
     height: 60px;
-    background: radial-gradient(circle, rgba(239, 136, 173, 0.4) 0%, rgba(239, 136, 173, 0) 70%);
+    background: radial-gradient(circle, rgba(122, 37, 124, 0.4) 0%, rgba(122, 37, 124, 0) 70%);
     border-radius: 50%;
     z-index: -1;
   }
@@ -199,7 +201,7 @@ const HeroImageContainer = styled.div`
 const HeroImg = styled.img`
   max-width: 100%;
   animation: float 6s ease-in-out infinite;
-  filter: drop-shadow(0 10px 15px rgba(255, 105, 180, 0.4));
+  filter: drop-shadow(0 10px 15px rgba(122, 37, 124, 0.4));
 
   @keyframes float {
     0% {

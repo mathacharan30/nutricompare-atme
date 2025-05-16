@@ -5,9 +5,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMoon, faSun, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { useTheme } from '../context/ThemeContext';
 import { ThemeToggle } from '../styles/ButtonStyles';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from './LanguageSwitcher';
 
 const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
+  const { t } = useTranslation();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -37,7 +40,7 @@ const Navbar = () => {
       <div className="container">
         <NavbarContent>
           <Logo to="/">
-            Nutri<LogoSpan>Compare</LogoSpan>
+            {t('app.name')}
           </Logo>
 
           <MobileMenuButton onClick={toggleMenu}>
@@ -46,22 +49,22 @@ const Navbar = () => {
 
           <NavLinks className={menuOpen ? 'active' : ''}>
             <NavItem>
-              <NavLink to="/" onClick={() => setMenuOpen(false)}>Home</NavLink>
+              <NavLink to="/" onClick={() => setMenuOpen(false)}>{t('nav.home')}</NavLink>
             </NavItem>
             <NavItem>
-              <NavLink to="/features" onClick={() => setMenuOpen(false)}>Features</NavLink>
+              <NavLink to="/features" onClick={() => setMenuOpen(false)}>{t('nav.features')}</NavLink>
             </NavItem>
             <NavItem>
-              <NavLink to="/scan" onClick={() => setMenuOpen(false)}>Scan Product</NavLink>
+              <NavLink to="/scan" onClick={() => setMenuOpen(false)}>{t('nav.scan')}</NavLink>
             </NavItem>
             <NavItem>
-              <NavLink to="/how-it-works" onClick={() => setMenuOpen(false)}>How It Works</NavLink>
+              <NavLink to="/about" onClick={() => setMenuOpen(false)}>{t('nav.about')}</NavLink>
             </NavItem>
             <NavItem>
-              <NavLink to="/chatbot" onClick={() => setMenuOpen(false)}>Nutrition Chat</NavLink>
+              <NavLink to="/contact" onClick={() => setMenuOpen(false)}>{t('nav.contact')}</NavLink>
             </NavItem>
             <NavItem>
-              <LoginButton to="/login" onClick={() => setMenuOpen(false)}>Login</LoginButton>
+              <LoginButton to="/login" onClick={() => setMenuOpen(false)}>{t('nav.login')}</LoginButton>
             </NavItem>
             <NavItem>
               <ThemeToggle
@@ -77,6 +80,9 @@ const Navbar = () => {
                 <FontAwesomeIcon icon={faSun} className="sun-icon" />
                 <span className="visually-hidden">Toggle Dark Mode</span>
               </ThemeToggle>
+            </NavItem>
+            <NavItem>
+              <LanguageSwitcher />
             </NavItem>
           </NavLinks>
         </NavbarContent>
@@ -97,7 +103,7 @@ const NavbarContainer = styled.nav`
   padding: ${props => props.scrolled ? '10px 0' : '15px 0'};
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
-  border-bottom: ${props => props.scrolled ? '1px solid rgba(255, 105, 180, 0.3)' : 'none'};
+  border-bottom: ${props => props.scrolled ? '1px solid rgba(122, 37, 124, 0.3)' : 'none'};
 `;
 
 const NavbarContent = styled.div`
@@ -115,7 +121,7 @@ const Logo = styled(Link)`
 `;
 
 const LogoSpan = styled.span`
-  color: var(--hot-pink);
+  color: var(--purple);
   text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 `;
 
@@ -138,7 +144,7 @@ const NavLinks = styled.ul`
     padding: 2rem;
     transition: right 0.3s ease;
     align-items: flex-start;
-    border-left: 1px solid rgba(255, 105, 180, 0.2);
+    border-left: 1px solid rgba(122, 37, 124, 0.2);
 
     &.active {
       right: 0;
@@ -176,8 +182,8 @@ const NavLink = styled(Link)`
 
 const LoginButton = styled(Link)`
   background-color: transparent;
-  border: 2px solid var(--hot-pink);
-  color: var(--hot-pink);
+  border: 2px solid var(--purple);
+  color: var(--purple);
   padding: 8px 20px;
   border-radius: var(--border-radius);
   font-weight: 600;
@@ -187,7 +193,7 @@ const LoginButton = styled(Link)`
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 
   &:hover {
-    background-color: var(--hot-pink);
+    background-color: var(--purple);
     color: var(--light-gray);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   }

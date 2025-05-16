@@ -161,56 +161,60 @@ const Chatbot = () => {
         <div className="container">
           <div className="row align-items-center">
             <div className="col-lg-6">
-              <ChatbotInfo>
-                <h2>Nutrition Assistant</h2>
-                <p className="lead">Have questions about nutrition? Our AI-powered chatbot can help you with personalized advice and answers.</p>
-                <ChatbotFeatures>
+              <ChatbotInfo data-aos="fade-right" data-aos-delay="100">
+                <h2 data-aos="fade-up" data-aos-delay="200">Nutrition Assistant</h2>
+                <p className="lead" data-aos="fade-up" data-aos-delay="300">Have questions about nutrition? Our AI-powered chatbot can help you with personalized advice and answers.</p>
+                <ChatbotFeatures data-aos="fade-up" data-aos-delay="400">
                   {features.map((feature, index) => (
-                    <li key={index}>
+                    <li key={index} data-aos="fade-up" data-aos-delay={500 + (index * 100)}>
                       <FontAwesomeIcon icon={faCheckCircle} />
                       {feature}
                     </li>
                   ))}
                 </ChatbotFeatures>
-                <ChatButton onClick={() => {
-                  // Reset chat state if it was previously opened
-                  if (hasWelcomed) {
-                    setMessages([]);
-                    setHasWelcomed(false);
-                    setSessionId(null);
-                  }
-                  toggleChat();
-                }}>
-                  Start Chatting
+                <ChatButton
+                  data-aos="fade-up"
+                  data-aos-delay="900"
+                  onClick={() => {
+                    // Reset chat state if it was previously opened
+                    if (hasWelcomed) {
+                      setMessages([]);
+                      setHasWelcomed(false);
+                      setSessionId(null);
+                    }
+                    toggleChat();
+                  }}
+                >
+                  <span>Start Chatting</span>
                 </ChatButton>
               </ChatbotInfo>
             </div>
             <div className="col-lg-6">
-              <ChatbotPreview>
-                <ChatHeader>
+              <ChatbotPreview data-aos="fade-left" data-aos-delay="300">
+                <ChatHeader data-aos="fade-down" data-aos-delay="400">
                   <ChatAvatar>
                     <FontAwesomeIcon icon={faRobot} />
                   </ChatAvatar>
                   <ChatTitle>
-                    <h4>NutriBot</h4>
+                    <h4>CalQ Assistant</h4>
                     <Status>Online</Status>
                   </ChatTitle>
                 </ChatHeader>
                 <ChatMessages>
-                  <Message className="bot">
-                    <p>Hello! I'm NutriBot, your personal nutrition assistant. How can I help you today?</p>
+                  <Message className="bot" data-aos="fade-right" data-aos-delay="500">
+                    <p>Hello! I'm CalQ Assistant, your personal nutrition assistant. How can I help you today?</p>
                   </Message>
-                  <Message className="user">
+                  <Message className="user" data-aos="fade-left" data-aos-delay="600">
                     <p>Is orange juice healthier than soda?</p>
                   </Message>
-                  <Message className="bot">
+                  <Message className="bot" data-aos="fade-right" data-aos-delay="700">
                     <p>While orange juice contains vitamins and minerals not found in soda, it's important to note that both can be high in sugar. A typical 8oz serving of orange juice contains about 21g of sugar, while the same amount of soda has about 26g.</p>
                   </Message>
-                  <Message className="bot">
+                  <Message className="bot" data-aos="fade-right" data-aos-delay="800">
                     <p>For a healthier option, I'd recommend water with a splash of fresh orange juice or herbal tea. Would you like more specific comparisons?</p>
                   </Message>
                 </ChatMessages>
-                <ChatInputContainer>
+                <ChatInputContainer data-aos="fade-up" data-aos-delay="900">
                   <input type="text" placeholder="Type your nutrition question..." disabled />
                   <button><FontAwesomeIcon icon={faPaperPlane} /></button>
                 </ChatInputContainer>
@@ -228,7 +232,7 @@ const Chatbot = () => {
               <FontAwesomeIcon icon={faRobot} />
             </ChatAvatar>
             <ChatTitle>
-              <h4>NutriBot</h4>
+              <h4>CalQ Assistant</h4>
               <Status>Online</Status>
             </ChatTitle>
             <CloseButton onClick={toggleChat}>
@@ -256,7 +260,7 @@ const Chatbot = () => {
             <ChatInputContainer>
               <input
                 type="text"
-                placeholder={isLoading ? "NutriBot is typing..." : "Type your nutrition question..."}
+                placeholder={isLoading ? "CalQ Assistant is typing..." : "Type your nutrition question..."}
                 value={inputValue}
                 onChange={handleInputChange}
                 disabled={isLoading}
@@ -315,7 +319,7 @@ const ChatbotInfo = styled.div`
   h2 {
     font-size: 2.5rem;
     margin-bottom: 1.5rem;
-    color: var(--primary-dark);
+    color: var(--text-dark); /* Changed from primary-dark to text-dark for better visibility in dark mode */
     position: relative;
     display: inline-block;
 
@@ -334,7 +338,7 @@ const ChatbotInfo = styled.div`
   .lead {
     font-size: 1.2rem;
     margin-bottom: 2rem;
-    color: var(--text-medium);
+    color: var(--text-dark); /* Changed from text-medium to text-dark for better visibility in dark mode */
   }
 
   @media (max-width: 992px) {
@@ -358,7 +362,7 @@ const ChatbotFeatures = styled.ul`
     margin-bottom: 15px;
     display: flex;
     align-items: center;
-    color: var(--text-medium);
+    color: var(--text-dark); /* Changed from text-medium to text-dark for better visibility in dark mode */
 
     svg {
       color: var(--primary-color);
@@ -401,9 +405,17 @@ const ChatButton = styled.button`
     z-index: 0;
   }
 
+  /* Add a span to ensure text is always visible */
+  span {
+    position: relative;
+    z-index: 1;
+    color: white; /* Ensure text is always white */
+  }
+
   &:hover {
     transform: translateY(-5px);
     box-shadow: 0 15px 25px rgba(165, 56, 96, 0.4);
+    color: white; /* Ensure text stays white on hover */
   }
 
   &:hover::before {

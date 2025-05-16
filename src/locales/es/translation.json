@@ -1,0 +1,111 @@
+{
+  "app": {
+    "name": "CalQ",
+    "tagline": "Toma decisiones más saludables sobre jugos"
+  },
+  "nav": {
+    "home": "Inicio",
+    "about": "Acerca de",
+    "features": "Características",
+    "scan": "Escanear",
+    "contact": "Contacto",
+    "login": "Iniciar Sesión"
+  },
+  "hero": {
+    "title": "Descubre Opciones de Jugos Más Saludables",
+    "subtitle": "Escanea cualquier producto de jugo para obtener información nutricional y encontrar alternativas más saludables",
+    "cta_primary": "Comenzar a Escanear",
+    "cta_secondary": "Saber Más"
+  },
+  "features": {
+    "title": "Características",
+    "subtitle": "Descubre qué hace especial a NutriScan",
+    "feature1": {
+      "title": "Carga y Escaneo Inteligente",
+      "description": "Carga y escanea etiquetas de alimentos o imágenes para extraer automáticamente información nutricional en segundos"
+    },
+    "feature2": {
+      "title": "Chatbot Nutricional Interactivo",
+      "description": "Obtén respuestas instantáneas a tus preguntas sobre nutrición y consejos dietéticos personalizados"
+    },
+    "feature3": {
+      "title": "Panel Nutricional Intuitivo",
+      "description": "Visualiza datos nutricionales de forma clara e interactiva para entender mejor tus alimentos"
+    },
+    "feature4": {
+      "title": "Puntuación de Salud basada en IA",
+      "description": "Nuestro algoritmo de aprendizaje automático califica la salubridad de los alimentos basándose en múltiples factores nutricionales"
+    },
+    "feature5": {
+      "title": "Analizador de Riesgos de Ingredientes",
+      "description": "El Procesamiento de Lenguaje Natural detecta ingredientes potencialmente dañinos o alergénicos"
+    },
+    "feature6": {
+      "title": "Sugerencias Personalizadas",
+      "description": "Recibe recomendaciones de productos alternativos más saludables basados en tus preferencias"
+    }
+  },
+  "scan": {
+    "title": "Escanea Tu Producto",
+    "subtitle": "Sube una imagen o toma una foto de tu producto de jugo para analizarlo",
+    "upload_option": "Subir",
+    "camera_option": "Cámara",
+    "barcode_option": "Código de Barras",
+    "upload_prompt": "Arrastra y suelta tu imagen aquí o haz clic para navegar",
+    "upload_formats": "Formatos soportados: JPG, PNG, JPEG",
+    "camera_prompt": "Posiciona el producto de jugo dentro del marco",
+    "barcode_prompt": "Posiciona el código de barras dentro del marco",
+    "analyze_button": "Analizar Producto",
+    "analyzing": "Analizando...",
+    "upload_error": "Por favor, sube una imagen o toma una foto primero",
+    "no_image_error": "No hay imagen disponible",
+    "analysis_error": "No se pudo analizar el producto. Por favor, inténtalo de nuevo."
+  },
+  "results": {
+    "title": "Análisis Nutricional",
+    "health_score": "Puntuación de Salud",
+    "nutrition_facts": "Información Nutricional de Tu Jugo",
+    "healthier_alternatives": "Alternativas Más Saludables",
+    "recommendation": "Recomendación",
+    "sugar": "Azúcar",
+    "calories": "Calorías",
+    "vitamin_c": "Vitamina C",
+    "preservatives": "Conservantes",
+    "yes": "Sí",
+    "no": "No",
+    "na": "N/D",
+    "excellent": "Excelente",
+    "good": "Bueno",
+    "poor": "Pobre"
+  },
+  "health_score": {
+    "tooltip": {
+      "sugar_penalty": "Azúcar ({{value}}g): -{{points}} puntos",
+      "calorie_penalty": "Calorías ({{value}}kcal): -{{points}} puntos",
+      "vitamin_c_bonus": "Vitamina C ({{value}}mg): +5 puntos",
+      "vitamin_c_penalty": "Vitamina C ({{value}}mg): -5 puntos",
+      "preservatives_penalty": "Contiene conservantes: -10 puntos"
+    }
+  },
+  "footer": {
+    "copyright": "© {{year}} NutriScan. Todos los derechos reservados.",
+    "privacy": "Política de Privacidad",
+    "terms": "Términos de Servicio",
+    "quick_links": "Enlaces Rápidos",
+    "support": "Soporte",
+    "stay_updated": "Mantente Actualizado",
+    "newsletter_text": "Suscríbete a nuestro boletín para recibir las últimas actualizaciones y consejos nutricionales.",
+    "email_placeholder": "Tu dirección de correo electrónico",
+    "email_label": "Dirección de correo electrónico",
+    "subscribe": "Suscribirse"
+  },
+  "language": {
+    "en": "Inglés",
+    "es": "Español",
+    "hi": "Hindi",
+    "ta": "Tamil",
+    "bn": "Bengalí",
+    "language_selector": "Idioma",
+    "indian_languages": "Idiomas de la India"
+  }
+}

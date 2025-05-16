@@ -4,14 +4,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faUpload,
   faCamera,
-  faBarcode,
   faPaperPlane
 } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import HealthScore from './HealthScore';
+import { useTranslation } from 'react-i18next';
 import ImageUpload from './ImageUpload';
 
 const ScanProduct = () => {
+  const { t } = useTranslation();
   const [activeMethod, setActiveMethod] = useState('upload');
   const [previewImage, setPreviewImage] = useState(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -20,7 +21,6 @@ const ScanProduct = () => {
 
   const cameraFeedRef = useRef(null);
   const cameraCanvasRef = useRef(null);
-  const barcodeFeedRef = useRef(null);
   const scanOptionsRef = useRef([]);
   const fileInputRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -39,11 +39,6 @@ const ScanProduct = () => {
     // Initialize camera if selected
     if (method === 'camera') {
       initCamera();
-    }
-
-    // Initialize barcode scanner if selected
-    if (method === 'barcode') {
-      initBarcodeScanner();
     }
   };
 
@@ -86,12 +81,7 @@ const ScanProduct = () => {
     }
   };
 
-  // Initialize barcode scanner
-  const initBarcodeScanner = () => {
-    // This would use a barcode scanning library like Quagga.js
-    // For this example, we'll just simulate the functionality
-    console.log('Barcode scanner initialized');
-  };
+
 
   // Add 3D tilt effect to scan options
   useEffect(() => {
@@ -153,7 +143,7 @@ const ScanProduct = () => {
 
   // Analyze product
   const analyzeProduct = async () => {
-    if (!previewImage && activeMethod !== 'barcode') {
+    if (!previewImage) {
       alert('Please upload or capture an image first');
       return;
     }
@@ -269,40 +259,37 @@ const ScanProduct = () => {
   return (
     <ScanSection id="scan">
       <div className="container">
-        <SectionHeader className="text-center">
-          <h2>Scan Your Product</h2>
-          <p>Upload a food product image or scan a barcode to get detailed nutritional information</p>
+        <SectionHeader className="text-center" data-aos="fade-up">
+          <h2 data-aos="fade-up" data-aos-delay="100">{t('scan.title')}</h2>
+          <p data-aos="fade-up" data-aos-delay="200">{t('scan.subtitle')}</p>
         </SectionHeader>
 
-        <ScanContainer>
-          <ScanOptions>
+        <ScanContainer data-aos="fade-up" data-aos-delay="300">
+          <ScanOptions data-aos="fade-up" data-aos-delay="400">
             <ScanOption
               className={activeMethod === 'upload' ? 'active' : ''}
               onClick={() => changeMethod('upload')}
               ref={el => scanOptionsRef.current[0] = el}
+              data-aos="zoom-in"
+              data-aos-delay="500"
             >
               <FontAwesomeIcon icon={faUpload} />
-              <span>Upload Image</span>
+              <span>{t('scan.upload_option')}</span>
             </ScanOption>
             <ScanOption
               className={activeMethod === 'camera' ? 'active' : ''}
               onClick={() => changeMethod('camera')}
               ref={el => scanOptionsRef.current[1] = el}
+              data-aos="zoom-in"
+              data-aos-delay="600"
             >
               <FontAwesomeIcon icon={faCamera} />
-              <span>Take Photo</span>
+              <span>{t('scan.camera_option')}</span>
             </ScanOption>
-            <ScanOption
-              className={activeMethod === 'barcode' ? 'active' : ''}
-              onClick={() => changeMethod('barcode')}
-              ref={el => scanOptionsRef.current[2] = el}
-            >
-              <FontAwesomeIcon icon={faBarcode} />
-              <span>Scan Barcode</span>
-            </ScanOption>
+
           </ScanOptions>
 
-          <ScanInterface>
+          <ScanInterface data-aos="fade-up" data-aos-delay="700">
             {/* Upload Interface */}
             {activeMethod === 'upload' && (
               <ImageUpload
@@ -315,20 +302,20 @@ const ScanProduct = () => {
 
             {/* Camera Interface */}
             {activeMethod === 'camera' && (
-              <ScanMethod>
-                <CameraContainer>
+              <ScanMethod data-aos="fade-up">
+                <CameraContainer data-aos="zoom-in" data-aos-delay="800">
                   {!previewImage ? (
                     <>
                       <video ref={cameraFeedRef} autoPlay playsInline></video>
                       <CameraOverlay>
                         <CameraFrame></CameraFrame>
                       </CameraOverlay>
-                      <CaptureButton onClick={captureImage}>
+                      <CaptureButton onClick={captureImage} data-aos="fade-up" data-aos-delay="900">
                         <FontAwesomeIcon icon={faCamera} />
                       </CaptureButton>
                     </>
                   ) : (
-                    <PreviewContainer>
+                    <PreviewContainer data-aos="zoom-in">
                       <img src={previewImage} alt="Captured" />
                       <button
                         className="remove-preview"
@@ -346,62 +333,55 @@ const ScanProduct = () => {
               </ScanMethod>
             )}
 
-            {/* Barcode Interface */}
-            {activeMethod === 'barcode' && (
-              <ScanMethod>
-                <BarcodeContainer>
-                  <video ref={barcodeFeedRef} autoPlay playsInline></video>
-                  <BarcodeOverlay>
-                    <BarcodeFrame></BarcodeFrame>
-                  </BarcodeOverlay>
-                  <BarcodeInstruction>Position the barcode within the frame</BarcodeInstruction>
-                </BarcodeContainer>
-              </ScanMethod>
-            )}
+
           </ScanInterface>
 
           <AnalyzeButton
             onClick={analyzeProduct}
             disabled={isAnalyzing}
+            data-aos="fade-up"
+            data-aos-delay="1000"
           >
             {isAnalyzing ? (
               <>
                 <span className="spinner"></span>
-                Analyzing...
+                {t('scan.analyzing')}
               </>
             ) : (
               <>
-                Analyze Product
+                {t('scan.analyze_button')}
                 <FontAwesomeIcon icon={faPaperPlane} />
               </>
             )}
           </AnalyzeButton>
 
           {error && (
-            <ErrorMessage>
+            <ErrorMessage data-aos="fade-up">
               {error}
             </ErrorMessage>
           )}
 
           {analysisResult && (
-            <ResultContainer>
-              <h3>Nutrition Analysis</h3>
+            <ResultContainer data-aos="fade-up">
+              <h3 data-aos="fade-up" data-aos-delay="100">{t('results.title')}</h3>
               <ResultContent>
                 {/* Health Score */}
                 {analysisResult.extracted_nutrition && (
-                  <HealthScore nutrition={analysisResult.extracted_nutrition} />
+                  <div data-aos="fade-up" data-aos-delay="200">
+                    <HealthScore nutrition={analysisResult.extracted_nutrition} />
+                  </div>
                 )}
 
                 {/* Nutrition Facts Card */}
-                <NutritionCard>
+                <NutritionCard data-aos="fade-up" data-aos-delay="300">
                   <NutritionCardHeader>
-                    <NutritionCardTitle>Your Juice Nutrition Facts</NutritionCardTitle>
+                    <NutritionCardTitle>{t('results.nutrition_facts')}</NutritionCardTitle>
                   </NutritionCardHeader>
                   <NutritionCardBody>
                     {analysisResult.extracted_nutrition && (
                       <NutritionTable>
-                        {Object.entries(analysisResult.extracted_nutrition).map(([key, value]) => (
-                          <NutritionRow key={key}>
+                        {Object.entries(analysisResult.extracted_nutrition).map(([key, value], index) => (
+                          <NutritionRow key={key} data-aos="fade-left" data-aos-delay={400 + (index * 50)}>
                             <NutritionLabel>
                               {key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                             </NutritionLabel>
@@ -419,8 +399,8 @@ const ScanProduct = () => {
 
                 {/* Healthier Alternatives */}
                 {analysisResult.suggested_healthier_juices && analysisResult.suggested_healthier_juices.length > 0 && (
-                  <AlternativesSection>
-                    <AlternativesTitle>Healthier Alternatives</AlternativesTitle>
+                  <AlternativesSection data-aos="fade-up" data-aos-delay="500">
+                    <AlternativesTitle data-aos="fade-up" data-aos-delay="600">{t('results.healthier_alternatives')}</AlternativesTitle>
                     <AlternativesGrid>
                       {analysisResult.suggested_healthier_juices.map((juice, index) => {
                         // Calculate health score for each alternative juice
@@ -455,47 +435,48 @@ const ScanProduct = () => {
                         const score = calculateHealthScore(juice);
 
                         // Determine score category and color
-                        let scoreColor, scoreCategory, scoreEmoji;
+                        let scoreColor, scoreEmoji;
                         if (score >= 90) {
                           scoreColor = 'var(--score-excellent)';
-                          scoreCategory = 'Excellent';
                           scoreEmoji = '🟢';
                         } else if (score >= 70) {
                           scoreColor = 'var(--score-good)';
-                          scoreCategory = 'Good';
                           scoreEmoji = '🟡';
                         } else {
                           scoreColor = 'var(--score-poor)';
-                          scoreCategory = 'Poor';
                           scoreEmoji = '🔴';
                         }
 
                         return (
-                          <AlternativeCard key={index}>
+                          <AlternativeCard
+                            key={index}
+                            data-aos="zoom-in"
+                            data-aos-delay={700 + (index * 100)}
+                          >
                             <AlternativeCardHeader>
                               <AlternativeName>{juice.name}</AlternativeName>
                               <AlternativeBrand>{juice.brand}</AlternativeBrand>
                             </AlternativeCardHeader>
                             <AlternativeCardBody>
-                              <AlternativeScoreBadge color={scoreColor}>
-                                {scoreEmoji} Health Score: {score}/100
+                              <AlternativeScoreBadge color={scoreColor} data-aos="fade-right" data-aos-delay={800 + (index * 100)}>
+                                {scoreEmoji} {t('results.health_score')}: {score}/100
                               </AlternativeScoreBadge>
                               <AlternativeNutrition>
-                                <NutritionItem>
-                                  <NutritionItemLabel>Sugar:</NutritionItemLabel>
+                                <NutritionItem data-aos="fade-up" data-aos-delay={850 + (index * 100)}>
+                                  <NutritionItemLabel>{t('results.sugar')}:</NutritionItemLabel>
                                   <NutritionItemValue>{juice.sugar_g}g</NutritionItemValue>
                                 </NutritionItem>
-                                <NutritionItem>
-                                  <NutritionItemLabel>Calories:</NutritionItemLabel>
+                                <NutritionItem data-aos="fade-up" data-aos-delay={900 + (index * 100)}>
+                                  <NutritionItemLabel>{t('results.calories')}:</NutritionItemLabel>
                                   <NutritionItemValue>{juice.calories_kcal}kcal</NutritionItemValue>
                                 </NutritionItem>
-                                <NutritionItem>
-                                  <NutritionItemLabel>Vitamin C:</NutritionItemLabel>
-                                  <NutritionItemValue>{juice.vitamin_c_mg !== null ? `${juice.vitamin_c_mg}mg` : 'N/A'}</NutritionItemValue>
+                                <NutritionItem data-aos="fade-up" data-aos-delay={950 + (index * 100)}>
+                                  <NutritionItemLabel>{t('results.vitamin_c')}:</NutritionItemLabel>
+                                  <NutritionItemValue>{juice.vitamin_c_mg !== null ? `${juice.vitamin_c_mg}mg` : t('results.na')}</NutritionItemValue>
                                 </NutritionItem>
-                                <NutritionItem>
-                                  <NutritionItemLabel>Preservatives:</NutritionItemLabel>
-                                  <NutritionItemValue>{juice.has_preservatives ? 'Yes' : 'No'}</NutritionItemValue>
+                                <NutritionItem data-aos="fade-up" data-aos-delay={1000 + (index * 100)}>
+                                  <NutritionItemLabel>{t('results.preservatives')}:</NutritionItemLabel>
+                                  <NutritionItemValue>{juice.has_preservatives ? t('results.yes') : t('results.no')}</NutritionItemValue>
                                 </NutritionItem>
                               </AlternativeNutrition>
                             </AlternativeCardBody>
@@ -508,11 +489,19 @@ const ScanProduct = () => {
 
                 {/* Suggestion Summary */}
                 {analysisResult.suggestion_summary && (
-                  <SummarySection>
-                    <SummaryTitle>Recommendation</SummaryTitle>
+                  <SummarySection data-aos="fade-up" data-aos-delay="1100">
+                    <SummaryTitle data-aos="fade-up" data-aos-delay="1200">Recommendation</SummaryTitle>
                     <SummaryContent>
                       {analysisResult.suggestion_summary.split('\n').map((paragraph, index) => (
-                        paragraph.trim() ? <SummaryParagraph key={index}>{paragraph}</SummaryParagraph> : null
+                        paragraph.trim() ?
+                          <SummaryParagraph
+                            key={index}
+                            data-aos="fade-up"
+                            data-aos-delay={1300 + (index * 100)}
+                          >
+                            {paragraph}
+                          </SummaryParagraph>
+                        : null
                       ))}
                     </SummaryContent>
                   </SummarySection>
@@ -757,50 +746,7 @@ const CaptureButton = styled.button`
   }
 `;
 
-const BarcodeContainer = styled.div`
-  position: relative;
-  width: 100%;
-  height: 300px;
-  border-radius: var(--border-radius);
-  overflow: hidden;
-  background-color: #000;
 
-  video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-`;
-
-const BarcodeOverlay = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const BarcodeFrame = styled.div`
-  width: 80%;
-  height: 30%;
-  border: 2px solid rgba(255, 255, 255, 0.7);
-  border-radius: 10px;
-  box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.5);
-`;
-
-const BarcodeInstruction = styled.p`
-  position: absolute;
-  bottom: 20px;
-  left: 0;
-  width: 100%;
-  text-align: center;
-  color: white;
-  font-size: 1rem;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
-`;
 
 const AnalyzeButton = styled.button`
   display: flex;

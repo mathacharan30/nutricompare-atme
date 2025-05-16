@@ -1,0 +1,111 @@
+{
+  "app": {
+    "name": "CalQ",
+    "tagline": "Make healthier juice choices"
+  },
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "features": "Features",
+    "scan": "Scan",
+    "contact": "Contact",
+    "login": "Login"
+  },
+  "hero": {
+    "title": "Discover Healthier Juice Options",
+    "subtitle": "Scan any juice product to get nutritional information and find healthier alternatives",
+    "cta_primary": "Start Scanning",
+    "cta_secondary": "Learn More"
+  },
+  "features": {
+    "title": "Features",
+    "subtitle": "Discover what makes NutriScan special",
+    "feature1": {
+      "title": "Smart Upload & Scan",
+      "description": "Upload and scan food labels or images to automatically extract nutritional information in seconds"
+    },
+    "feature2": {
+      "title": "Interactive Nutrition Chatbot",
+      "description": "Get instant answers to your nutrition questions and personalized dietary advice"
+    },
+    "feature3": {
+      "title": "Intuitive Nutritional Dashboard",
+      "description": "View clear, interactive visualizations of nutritional data to understand your food better"
+    },
+    "feature4": {
+      "title": "ML-Based Health Scoring",
+      "description": "Our machine learning algorithm rates food healthiness based on multiple nutritional factors"
+    },
+    "feature5": {
+      "title": "Ingredient Risk Analyzer",
+      "description": "Natural Language Processing detects potentially harmful or allergenic ingredients"
+    },
+    "feature6": {
+      "title": "Personalized Suggestions",
+      "description": "Get recommendations for healthier alternative products based on your preferences"
+    }
+  },
+  "scan": {
+    "title": "Scan Your Product",
+    "subtitle": "Upload an image or take a photo of your juice product to analyze it",
+    "upload_option": "Upload",
+    "camera_option": "Camera",
+    "barcode_option": "Barcode",
+    "upload_prompt": "Drag & drop your image here or click to browse",
+    "upload_formats": "Supported formats: JPG, PNG, JPEG",
+    "camera_prompt": "Position the juice product within the frame",
+    "barcode_prompt": "Position the barcode within the frame",
+    "analyze_button": "Analyze Product",
+    "analyzing": "Analyzing...",
+    "upload_error": "Please upload an image or take a photo first",
+    "no_image_error": "No image file available",
+    "analysis_error": "Failed to analyze the product. Please try again."
+  },
+  "results": {
+    "title": "Nutrition Analysis",
+    "health_score": "Health Score",
+    "nutrition_facts": "Your Juice Nutrition Facts",
+    "healthier_alternatives": "Healthier Alternatives",
+    "recommendation": "Recommendation",
+    "sugar": "Sugar",
+    "calories": "Calories",
+    "vitamin_c": "Vitamin C",
+    "preservatives": "Preservatives",
+    "yes": "Yes",
+    "no": "No",
+    "na": "N/A",
+    "excellent": "Excellent",
+    "good": "Good",
+    "poor": "Poor"
+  },
+  "health_score": {
+    "tooltip": {
+      "sugar_penalty": "Sugar ({{value}}g): -{{points}} points",
+      "calorie_penalty": "Calories ({{value}}kcal): -{{points}} points",
+      "vitamin_c_bonus": "Vitamin C ({{value}}mg): +5 points",
+      "vitamin_c_penalty": "Vitamin C ({{value}}mg): -5 points",
+      "preservatives_penalty": "Contains preservatives: -10 points"
+    }
+  },
+  "footer": {
+    "copyright": "© {{year}} NutriScan. All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "quick_links": "Quick Links",
+    "support": "Support",
+    "stay_updated": "Stay Updated",
+    "newsletter_text": "Subscribe to our newsletter for the latest updates and nutrition tips.",
+    "email_placeholder": "Your email address",
+    "email_label": "Email address",
+    "subscribe": "Subscribe"
+  },
+  "language": {
+    "en": "English",
+    "es": "Spanish",
+    "hi": "Hindi",
+    "ta": "Tamil",
+    "bn": "Bengali",
+    "language_selector": "Language",
+    "indian_languages": "Indian Languages"
+  }
+}

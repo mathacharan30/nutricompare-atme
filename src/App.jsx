@@ -10,8 +10,21 @@ import ScanPage from './pages/Scan';
 import HowItWorksPage from './pages/HowItWorks';
 import ChatbotPage from './pages/ChatbotPage';
 import TestComponent from './components/TestComponent';
+import { useEffect } from 'react';
+import AOS from 'aos';
 
 function App() {
+  // Initialize AOS animation library
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: false,
+      mirror: true,
+      offset: 100,
+      easing: 'ease-in-out'
+    });
+  }, []);
+
   return (
     <ThemeProvider>
       <GlobalStyles />

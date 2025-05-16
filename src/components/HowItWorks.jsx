@@ -57,9 +57,9 @@ const HowItWorks = () => {
   return (
     <HowItWorksSection id="how-it-works">
       <div className="container">
-        <SectionHeader className="text-center">
-          <h2>How It Works</h2>
-          <p>Our advanced technology makes nutritional analysis simple and accurate</p>
+        <SectionHeader className="text-center" data-aos="fade-up">
+          <h2 data-aos="fade-up" data-aos-delay="100">How It Works</h2>
+          <p data-aos="fade-up" data-aos-delay="200">Our advanced technology makes nutritional analysis simple and accurate</p>
         </SectionHeader>
 
         <StepsContainer>
@@ -68,9 +68,12 @@ const HowItWorks = () => {
               key={index}
               ref={el => stepsRef.current[index] = el}
               className={index % 2 === 0 ? 'from-left' : 'from-right'}
+              data-aos={index % 2 === 0 ? 'fade-right' : 'fade-left'}
+              data-aos-delay={300 + (index * 100)}
+              data-aos-duration="800"
             >
-              <StepNumber>{step.number}</StepNumber>
-              <StepContent>
+              <StepNumber data-aos="zoom-in" data-aos-delay={400 + (index * 100)}>{step.number}</StepNumber>
+              <StepContent data-aos="fade-up" data-aos-delay={500 + (index * 100)}>
                 <h3>{step.title}</h3>
                 <p>{step.description}</p>
               </StepContent>
@@ -85,7 +88,7 @@ const HowItWorks = () => {
 // Styled Components
 const HowItWorksSection = styled.section`
   padding: 100px 0;
-  background-color: var(--bg-white);
+  background-color: var(--bg-light); /* Changed from bg-white to bg-light for better contrast in dark mode */
   position: relative;
   overflow: hidden;
 
@@ -118,6 +121,14 @@ const SectionHeader = styled.div`
   margin-bottom: 4rem;
   position: relative;
   z-index: 1;
+
+  h2 {
+    color: var(--text-dark); /* Ensure heading is visible in dark mode */
+  }
+
+  p {
+    color: var(--text-dark); /* Ensure paragraph is visible in dark mode */
+  }
 `;
 
 const StepsContainer = styled.div`
@@ -273,11 +284,11 @@ const StepContent = styled.div`
   h3 {
     font-size: 1.5rem;
     margin-bottom: 15px;
-    color: var(--primary-dark);
+    color: var(--text-dark); /* Changed from primary-dark to text-dark for better visibility */
   }
 
   p {
-    color: var(--text-medium);
+    color: var(--text-dark); /* Changed from text-medium to text-dark for better visibility */
     margin-bottom: 0;
   }
 

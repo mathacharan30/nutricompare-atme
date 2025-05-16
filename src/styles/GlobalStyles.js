@@ -2,18 +2,18 @@ import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyles = createGlobalStyle`
   :root {
-    /* Color Palette - Pink Theme */
-    --hot-pink: #FF69B4;
-    --light-pink: #FF98C9;
-    --pale-pink: #FFC7DE;
-    --light-gray: #F0F0F0;
+    /* Color Palette - Purple Theme */
+    --purple: #7A257C;
+    --dark-purple: #461F3F;
     --black: #000000;
+    --light-gray: #F0F0F0;
+    --white: #FFFFFF;
 
     /* Primary Colors */
-    --primary-color: var(--hot-pink);
-    --primary-dark: var(--black);
-    --primary-light: var(--light-pink);
-    --secondary-color: var(--pale-pink);
+    --primary-color: var(--purple);
+    --primary-dark: var(--dark-purple);
+    --primary-light: #9A4A9C;
+    --secondary-color: var(--dark-purple);
     --accent-color: var(--light-gray);
 
     /* Text Colors */
@@ -23,20 +23,20 @@ const GlobalStyles = createGlobalStyle`
 
     /* Background Colors */
     --bg-white: #F0F0F0;
-    --bg-light: #FFC7DE;
-    --bg-gray: #FF98C9;
+    --bg-light: #E0E0E0;
+    --bg-gray: #CCCCCC;
 
     /* Health Score Colors */
-    --score-excellent: var(--hot-pink);
+    --score-excellent: var(--purple);
     --score-good: #8BC34A;
     --score-moderate: #FFC107;
-    --score-poor: var(--black);
+    --score-poor: var(--dark-purple);
     --score-bad: #F44336;
 
     /* Gradient Backgrounds */
-    --gradient-primary: linear-gradient(135deg, var(--hot-pink) 0%, var(--black) 100%);
-    --gradient-light: linear-gradient(135deg, var(--light-pink) 0%, var(--hot-pink) 100%);
-    --gradient-dark: linear-gradient(135deg, var(--black) 0%, #333333 100%);
+    --gradient-primary: linear-gradient(135deg, var(--purple) 0%, var(--dark-purple) 100%);
+    --gradient-light: linear-gradient(135deg, #9A4A9C 0%, var(--purple) 100%);
+    --gradient-dark: linear-gradient(135deg, var(--dark-purple) 0%, var(--black) 100%);
 
     /* Other */
     --border-radius: 8px;
@@ -53,25 +53,25 @@ const GlobalStyles = createGlobalStyle`
 
     /* Background Colors - Adjusted for better contrast */
     --bg-white: #000000;
-    --bg-light: #333333;
-    --bg-gray: #666666;
+    --bg-light: #1A1A1A;
+    --bg-gray: #2A2A2A;
 
     /* Adjusted Palette for Dark Mode - Brighter colors for better visibility */
-    --hot-pink-dm: #FF69B4;
-    --light-pink-dm: #FF98C9;
-    --pale-pink-dm: #FFC7DE;
-    --light-gray-dm: #F0F0F0;
+    --purple-dm: #7A257C;
+    --dark-purple-dm: #461F3F;
     --black-dm: #000000;
+    --light-gray-dm: #F0F0F0;
+    --white-dm: #FFFFFF;
 
     /* Primary Colors (Dark Mode) */
-    --primary-color: var(--hot-pink-dm);
+    --primary-color: var(--purple-dm);
     --primary-dark: var(--black-dm);
-    --primary-light: var(--light-pink-dm);
+    --primary-light: #9A4A9C;
 
     /* Gradient Backgrounds (Dark Mode) */
-    --gradient-primary: linear-gradient(135deg, var(--hot-pink-dm) 0%, var(--black-dm) 100%);
-    --gradient-light: linear-gradient(135deg, var(--light-pink-dm) 0%, var(--hot-pink-dm) 100%);
-    --gradient-dark: linear-gradient(135deg, #333333 0%, var(--black-dm) 100%);
+    --gradient-primary: linear-gradient(135deg, var(--purple-dm) 0%, var(--dark-purple-dm) 100%);
+    --gradient-light: linear-gradient(135deg, #9A4A9C 0%, var(--purple-dm) 100%);
+    --gradient-dark: linear-gradient(135deg, var(--dark-purple-dm) 0%, var(--black-dm) 100%);
 
     /* Box Shadow for Dark Mode */
     --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);

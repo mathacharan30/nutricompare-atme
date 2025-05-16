@@ -1,15 +1,17 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-  faFacebookF, 
-  faTwitter, 
-  faInstagram, 
-  faLinkedinIn 
+import {
+  faFacebookF,
+  faTwitter,
+  faInstagram,
+  faLinkedinIn
 } from '@fortawesome/free-brands-svg-icons';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
+  const { t } = useTranslation();
   const currentYear = new Date().getFullYear();
 
   return (
@@ -18,11 +20,10 @@ const Footer = () => {
         <FooterContent>
           <FooterAbout>
             <FooterLogo>
-              Nutri<FooterLogoSpan>Compare</FooterLogoSpan>
+              {t('app.name')}
             </FooterLogo>
             <p>
-              Helping you make healthier food choices with advanced nutrition analysis 
-              and personalized recommendations.
+              {t('app.tagline')}
             </p>
             <SocialLinks>
               <SocialLink href="https://facebook.com" target="_blank" rel="noopener noreferrer">
@@ -41,37 +42,37 @@ const Footer = () => {
           </FooterAbout>
 
           <FooterLinksSection>
-            <h4>Quick Links</h4>
+            <h4>{t('footer.quick_links')}</h4>
             <FooterLinks>
-              <FooterLink to="/">Home</FooterLink>
-              <FooterLink to="/features">Features</FooterLink>
-              <FooterLink to="/scan">Scan Product</FooterLink>
-              <FooterLink to="/how-it-works">How It Works</FooterLink>
-              <FooterLink to="/chatbot">Nutrition Chat</FooterLink>
+              <FooterLink to="/">{t('nav.home')}</FooterLink>
+              <FooterLink to="/features">{t('nav.features')}</FooterLink>
+              <FooterLink to="/scan">{t('nav.scan')}</FooterLink>
+              <FooterLink to="/about">{t('nav.about')}</FooterLink>
+              <FooterLink to="/contact">{t('nav.contact')}</FooterLink>
             </FooterLinks>
           </FooterLinksSection>
 
           <FooterLinksSection>
-            <h4>Support</h4>
+            <h4>{t('footer.support')}</h4>
             <FooterLinks>
               <FooterLink to="/faq">FAQ</FooterLink>
-              <FooterLink to="/privacy">Privacy Policy</FooterLink>
-              <FooterLink to="/terms">Terms of Service</FooterLink>
-              <FooterLink to="/contact">Contact Us</FooterLink>
-              <FooterLink to="/about">About Us</FooterLink>
+              <FooterLink to="/privacy">{t('footer.privacy')}</FooterLink>
+              <FooterLink to="/terms">{t('footer.terms')}</FooterLink>
+              <FooterLink to="/contact">{t('nav.contact')}</FooterLink>
+              <FooterLink to="/about">{t('nav.about')}</FooterLink>
             </FooterLinks>
           </FooterLinksSection>
 
           <FooterNewsletter>
-            <h4>Stay Updated</h4>
-            <p>Subscribe to our newsletter for the latest updates and nutrition tips.</p>
+            <h4>{t('footer.stay_updated')}</h4>
+            <p>{t('footer.newsletter_text')}</p>
             <NewsletterForm>
-              <NewsletterInput 
-                type="email" 
-                placeholder="Your email address" 
-                aria-label="Email address"
+              <NewsletterInput
+                type="email"
+                placeholder={t('footer.email_placeholder')}
+                aria-label={t('footer.email_label')}
               />
-              <NewsletterButton type="submit" aria-label="Subscribe">
+              <NewsletterButton type="submit" aria-label={t('footer.subscribe')}>
                 <FontAwesomeIcon icon={faPaperPlane} />
               </NewsletterButton>
             </NewsletterForm>
@@ -81,7 +82,7 @@ const Footer = () => {
 
       <FooterBottom>
         <div className="container">
-          <p>&copy; {currentYear} NutriCompare. All rights reserved.</p>
+          <p>{t('footer.copyright', { year: currentYear })}</p>
         </div>
       </FooterBottom>
     </FooterContainer>
