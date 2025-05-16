@@ -43,7 +43,7 @@ const Chatbot = () => {
       // Add welcome message
       const welcomeMessage = {
         type: 'bot',
-        text: session.message || "Hello! I'm NutriBot, your personal nutrition assistant. How can I help you today?"
+        text: session.message || "Hello! I'm CalQ Assistant, your personal nutrition assistant. How can I help you today?"
       };
 
       // Add typing indicator
@@ -60,7 +60,7 @@ const Chatbot = () => {
       console.error('Failed to initialize chat:', error);
       setMessages([{
         type: 'bot',
-        text: "Hello! I'm NutriBot, your personal nutrition assistant. How can I help you today?"
+        text: "Hello! I'm CalQ Assistant, your personal nutrition assistant. How can I help you today?"
       }]);
       setHasWelcomed(true);
       setIsLoading(false);

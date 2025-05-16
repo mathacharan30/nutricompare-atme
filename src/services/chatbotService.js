@@ -1,33 +1,36 @@
 import axios from 'axios';
 
-// Base URL for the API - replace with your actual API endpoint
-const API_URL = 'https://api.example.com/chatbot';
+// Base URL for the API - the actual chatbot API endpoint
+const API_URL = 'https://nutricompare-chatbot.onrender.com';
 
 // Create an axios instance with default config
 const chatbotApi = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
-  },
-  timeout: 10000, // 10 seconds timeout
+  }, // 15 seconds timeout (increased because render.com free tier can be slow on first request)
 });
 
 /**
  * Send a message to the chatbot API
  * @param {string} message - The user's message
- * @param {string} sessionId - The current chat session ID
+ * @param {string} sessionId - The current chat session ID (not used with the new API)
  * @returns {Promise} - The API response
  */
 export const sendMessage = async (message, sessionId) => {
   try {
-    const response = await chatbotApi.post('/message', {
-      message,
-      sessionId,
+    const response = await chatbotApi.post('/chat', {
+      query: message,
     });
-    return response.data;
+
+    // Format the response to match what the component expects
+    return {
+      message: response.data.summary,
+      timestamp: new Date().toISOString(),
+    };
   } catch (error) {
     console.error('Error sending message to chatbot:', error);
-    
+
     // For development/demo purposes, return a mock response if the API fails
     return getMockResponse(message);
   }
@@ -35,36 +38,34 @@ export const sendMessage = async (message, sessionId) => {
 
 /**
  * Start a new chat session
- * @returns {Promise} - The API response with session ID
+ * @returns {Promise} - The API response with welcome message
  */
 export const startSession = async () => {
   try {
-    const response = await chatbotApi.post('/session');
-    return response.data;
+    // The new API doesn't have a session concept, so we'll just return a welcome message
+    return {
+      sessionId: `session-${Date.now()}`, // We'll keep this for compatibility
+      message: "Welcome to CalQ! I'm your personal nutrition assistant. How can I help you today?",
+    };
   } catch (error) {
     console.error('Error starting chatbot session:', error);
-    
+
     // For development/demo purposes, return a mock session if the API fails
     return {
       sessionId: `mock-session-${Date.now()}`,
-      message: "Welcome to NutriBot! I'm your personal nutrition assistant. How can I help you today?",
+      message: "Welcome to CalQ! I'm your personal nutrition assistant. How can I help you today?",
     };
   }
 };
 
 /**
  * End a chat session
- * @param {string} sessionId - The current chat session ID
+ * @param {string} sessionId - The current chat session ID (not used with the new API)
  * @returns {Promise} - The API response
  */
 export const endSession = async (sessionId) => {
-  try {
-    const response = await chatbotApi.delete(`/session/${sessionId}`);
-    return response.data;
-  } catch (error) {
-    console.error('Error ending chatbot session:', error);
-    return { success: true }; // Mock success response
-  }
+  // The new API doesn't have a session concept, so we'll just return a success response
+  return { success: true };
 };
 
 /**
@@ -74,7 +75,7 @@ export const endSession = async (sessionId) => {
  */
 const getMockResponse = (message) => {
   const lowerMessage = message.toLowerCase();
-  
+
   // Greeting patterns
   if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
     return {
@@ -82,7 +83,7 @@ const getMockResponse = (message) => {
       timestamp: new Date().toISOString(),
     };
   }
-  
+
   // Questions about calories
   if (lowerMessage.includes('calorie') || lowerMessage.includes('calories')) {
     return {
@@ -90,7 +91,7 @@ const getMockResponse = (message) => {
       timestamp: new Date().toISOString(),
     };
   }
-  
+
   // Questions about protein
   if (lowerMessage.includes('protein')) {
     return {
@@ -98,7 +99,7 @@ const getMockResponse = (message) => {
       timestamp: new Date().toISOString(),
     };
   }
-  
+
   // Questions about vitamins
   if (lowerMessage.includes('vitamin')) {
     return {
@@ -106,7 +107,7 @@ const getMockResponse = (message) => {
       timestamp: new Date().toISOString(),
     };
   }
-  
+
   // Questions about sugar
   if (lowerMessage.includes('sugar')) {
     return {
@@ -114,7 +115,7 @@ const getMockResponse = (message) => {
       timestamp: new Date().toISOString(),
     };
   }
-  
+
   // Questions about fruits
   if (lowerMessage.includes('fruit')) {
     return {
@@ -122,7 +123,7 @@ const getMockResponse = (message) => {
       timestamp: new Date().toISOString(),
     };
   }
-  
+
   // Questions about vegetables
   if (lowerMessage.includes('vegetable') || lowerMessage.includes('veggies')) {
     return {
@@ -130,7 +131,7 @@ const getMockResponse = (message) => {
       timestamp: new Date().toISOString(),
     };
   }
-  
+
   // Questions about water or hydration
   if (lowerMessage.includes('water') || lowerMessage.includes('hydration') || lowerMessage.includes('drink')) {
     return {
@@ -138,10 +139,10 @@ const getMockResponse = (message) => {
       timestamp: new Date().toISOString(),
     };
   }
-  
+
   // Default response for other queries
   return {
-    message: "That's an interesting nutrition question! While I'm just a demo chatbot with limited responses, the full version of NutriBot would provide detailed information about this topic. Is there something specific about nutrition you'd like to know?",
+    message: "That's an interesting nutrition question! While I'm just a demo chatbot with limited responses, the full version of CalQ would provide detailed information about this topic. Is there something specific about nutrition you'd like to know?",
     timestamp: new Date().toISOString(),
   };
 };
